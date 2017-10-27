@@ -41,8 +41,13 @@ public class LooseScrewsOpMode1 extends OpMode {
     //Hardware
     private DcMotor left_front_drive;
     private DcMotor right_front_drive;
+
     private DcMotor left_rear_drive;
     private DcMotor right_rear_drive;
+
+    private DcMotor left_lift;
+    private DcMotor right_lift;
+
     public double leftPower;
     public double rightPower;
 
@@ -59,11 +64,6 @@ public class LooseScrewsOpMode1 extends OpMode {
         left_rear_drive.setDirection(DcMotor.Direction.REVERSE);
 
         getHardware();
-
-    }
-
-    @Override
-    public void init_loop() {
 
     }
 
@@ -88,25 +88,37 @@ public class LooseScrewsOpMode1 extends OpMode {
             rightPower = -gamepad1.right_stick_y;
         }
 
-        setLeftPower(leftPower);
-        setRightPower(rightPower);
+        left_lift.setPower(gamepad1.left_trigger);
+        right_lift.setPower(gamepad1.right_trigger);
+
+        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && gamepad1.a) { //if motors aren't being controlled independently, allow indep. control
+            QOL.setAllPower(1d, left_lift, right_lift);
+        }
+
+        QOL.setAllPower(leftPower, left_front_drive, left_rear_drive);
+        QOL.setAllPower(rightPower, right_front_drive, right_rear_drive);
 
         setTelemetry();
 
     }
 
     private void getHardware() {
-        left_front_drive = hardwareMap.get(DcMotor.class, "left_front");
-        right_front_drive = hardwareMap.get(DcMotor.class, "right_front");
-        left_rear_drive = hardwareMap.get(DcMotor.class, "left_rear");
-        right_rear_drive = hardwareMap.get(DcMotor.class, "right_rear");
+        left_front_drive = hardwareMap.get(DcMotor.class, "front_left");
+        right_front_drive = hardwareMap.get(DcMotor.class, "front_right");
+        left_rear_drive = hardwareMap.get(DcMotor.class, "rear_left");
+        right_rear_drive = hardwareMap.get(DcMotor.class, "rear_right");
+
+        left_lift = hardwareMap.get(DcMotor.class, "left_lift");
+        right_lift = hardwareMap.get(DcMotor.class, "right_lift");
     }
 
+    @Deprecated
     private void setLeftPower(double pwr) {
         left_front_drive.setPower(pwr);
         left_rear_drive.setPower(pwr);
     }
 
+    @Deprecated
     private void setRightPower(double pwr) {
         right_front_drive.setPower(pwr);
         right_rear_drive.setPower(pwr);
@@ -120,12 +132,16 @@ public class LooseScrewsOpMode1 extends OpMode {
             telemetry.addData("Controls"," Y: " + String.valueOf(gamepad1.y) + " X: " + String.valueOf(gamepad1.a));
     }
 
-    private void lift() {
-        //lift that shit
-    }
+}
 
-    private void poop() {
-        //poop that shit
+class QOL {
+
+    private QOL() {} //so idiots like me can't accidentally instantiate a static-only class
+
+    static void setAllPower(double pwr, DcMotor... motors) {
+        for (DcMotor motor : motors) {
+            motor.setPower(pwr);
+        }
     }
 
 }
