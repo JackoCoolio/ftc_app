@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * Created by jacktwamb52 on 9/29/2017.
- */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /*
 USING "PHONE 4" AND "RC PHONE"
@@ -34,10 +33,6 @@ public class LooseScrewsOpMode1 extends OpMode {
     //Telemetry
     private ElapsedTime runtime = new ElapsedTime();
 
-    //Hardware Directions
-    private DcMotorSimple.Direction left_drive_dir;
-    private DcMotorSimple.Direction right_drive_dir;
-
     //Hardware
     private DcMotor left_front_drive;
     private DcMotor right_front_drive;
@@ -48,8 +43,12 @@ public class LooseScrewsOpMode1 extends OpMode {
     private DcMotor left_lift;
     private DcMotor right_lift;
 
-    public double leftPower;
-    public double rightPower;
+    private MotorGroup leftMotors;
+    private MotorGroup rightMotors;
+    private MotorGroup liftMotors;
+
+    private double leftPower;
+    private double rightPower;
 
     //Other
     private DriveMode mode = DriveMode.Tank;
@@ -59,11 +58,15 @@ public class LooseScrewsOpMode1 extends OpMode {
 
         telemetry.addData("Status","Initialized");
 
-        getHardware();
-        left_front_drive.setDirection(DcMotor.Direction.REVERSE);
-        left_rear_drive.setDirection(DcMotor.Direction.REVERSE);
+        leftMotors = new MotorGroup("front_left","rear_left")
+                .initMotors(hardwareMap)
+                .setDirection(DcMotor.Direction.REVERSE);
 
-        getHardware();
+        rightMotors = new MotorGroup("front_right","rear_right")
+                .initMotors(hardwareMap);
+
+        liftMotors = new MotorGroup("left_lift","right_lift")
+                .initMotors(hardwareMap);
 
     }
 
@@ -88,28 +91,18 @@ public class LooseScrewsOpMode1 extends OpMode {
             rightPower = -gamepad1.right_stick_y;
         }
 
-        left_lift.setPower(gamepad1.left_trigger);
-        right_lift.setPower(gamepad1.right_trigger);
+        liftMotors.setPower(gamepad1.left_trigger, "left_lift");
+        liftMotors.setPower(gamepad1.right_trigger, "right_lift");
 
-        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && gamepad1.a) { //if motors aren't being controlled independently, allow indep. control
-            QOL.setAllPower(1d, left_lift, right_lift);
+        if (gamepad1.left_trigger == 0 && gamepad1.right_trigger == 0 && gamepad1.a) { // If motors aren't being controlled independently, allow independent control.
+            liftMotors.setPower(1);
         }
 
-        QOL.setAllPower(leftPower, left_front_drive, left_rear_drive);
-        QOL.setAllPower(rightPower, right_front_drive, right_rear_drive);
+        leftMotors.setPower(leftPower);
+        rightMotors.setPower(rightPower);
 
         setTelemetry();
 
-    }
-
-    private void getHardware() {
-        left_front_drive = hardwareMap.get(DcMotor.class, "front_left");
-        right_front_drive = hardwareMap.get(DcMotor.class, "front_right");
-        left_rear_drive = hardwareMap.get(DcMotor.class, "rear_left");
-        right_rear_drive = hardwareMap.get(DcMotor.class, "rear_right");
-
-        left_lift = hardwareMap.get(DcMotor.class, "left_lift");
-        right_lift = hardwareMap.get(DcMotor.class, "right_lift");
     }
 
     @Deprecated
@@ -127,21 +120,66 @@ public class LooseScrewsOpMode1 extends OpMode {
     private void setTelemetry() {
         telemetry.addData("Status","Running");
         telemetry.addData("Runtime", runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("Motor Power", "left (%.2f), right (%.2f)", leftPower, rightPower);
         //if (debug)
             telemetry.addData("Controls"," Y: " + String.valueOf(gamepad1.y) + " X: " + String.valueOf(gamepad1.a));
     }
 
-}
-
-class QOL {
-
-    private QOL() {} //so idiots like me can't accidentally instantiate a static-only class
-
-    static void setAllPower(double pwr, DcMotor... motors) {
+    private void setAllPower(double pwr, DcMotor... motors) {
         for (DcMotor motor : motors) {
             motor.setPower(pwr);
         }
+    }
+
+}
+
+class MotorGroup {
+
+    private ArrayList<String> motorNames;
+    private HashMap<String, DcMotor> motors;
+
+    public MotorGroup() {
+        motorNames = new ArrayList<>();
+        motors = new HashMap<>();
+    }
+
+    public MotorGroup(String... names) {
+        motorNames = new ArrayList<>(Arrays.asList(names));
+        motors = new HashMap<>();
+    }
+
+    public void addMotors(String... _motorNames) {
+        for (String m : _motorNames)
+            motorNames.add(m);
+    }
+
+    public MotorGroup initMotors(HardwareMap hm) {
+        for (String m : motorNames)
+            motors.put(m, hm.get(DcMotor.class, m));
+        motorNames.clear();
+        return this; // Returns itself for easy chaining
+    }
+
+    public MotorGroup setDirection(DcMotor.Direction dir) {
+        for (DcMotor motor : motors.values()) {
+            motor.setDirection(dir);
+        }
+        return this; // Returns itself for easy chaining
+    }
+
+    public void setPower(double power) {
+        for (DcMotor motor : motors.values()) {
+            motor.setPower(power);
+        }
+    }
+
+    public void setPower(double power, String... _motors) {
+        for (String m : _motors)
+            motors.get(m).setPower(power);
+    }
+
+    public DcMotor getMotor(String name) {
+        return motors.get(name);
     }
 
 }
