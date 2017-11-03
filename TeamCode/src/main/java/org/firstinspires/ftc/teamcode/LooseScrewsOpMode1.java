@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ Controller 0 is top
 @TeleOp(name="Drive", group="Drive Test")
 public class LooseScrewsOpMode1 extends OpMode {
 
-    enum DriveMode {
+    private enum DriveMode {
         Tank,
         POV
     }
@@ -31,7 +30,7 @@ public class LooseScrewsOpMode1 extends OpMode {
     private boolean debug = true;
 
     //Telemetry
-    private ElapsedTime runtime = new ElapsedTime();
+//    private ElapsedTime runtime = new ElapsedTime();
 
     //Hardware
     private DcMotor left_front_drive;
@@ -68,11 +67,6 @@ public class LooseScrewsOpMode1 extends OpMode {
         liftMotors = new MotorGroup("left_lift","right_lift")
                 .initMotors(hardwareMap);
 
-    }
-
-    @Override
-    public void start() {
-        runtime.reset();
     }
 
     @Override
@@ -119,7 +113,7 @@ public class LooseScrewsOpMode1 extends OpMode {
 
     private void setTelemetry() {
         telemetry.addData("Status","Running");
-        telemetry.addData("Runtime", runtime.toString());
+        telemetry.addData("Runtime", getRuntime());
         telemetry.addData("Motor Power", "left (%.2f), right (%.2f)", leftPower, rightPower);
         //if (debug)
             telemetry.addData("Controls"," Y: " + String.valueOf(gamepad1.y) + " X: " + String.valueOf(gamepad1.a));
@@ -138,47 +132,46 @@ class MotorGroup {
     private ArrayList<String> motorNames;
     private HashMap<String, DcMotor> motors;
 
-    public MotorGroup() {
+    protected MotorGroup() {
         motorNames = new ArrayList<>();
         motors = new HashMap<>();
     }
 
-    public MotorGroup(String... names) {
+    protected MotorGroup(String... names) {
         motorNames = new ArrayList<>(Arrays.asList(names));
         motors = new HashMap<>();
     }
 
-    public void addMotors(String... _motorNames) {
-        for (String m : _motorNames)
-            motorNames.add(m);
+    protected void addMotors(String... _motorNames) {
+        motorNames = new ArrayList<>(Arrays.asList(_motorNames));
     }
 
-    public MotorGroup initMotors(HardwareMap hm) {
+    protected MotorGroup initMotors(HardwareMap hm) {
         for (String m : motorNames)
             motors.put(m, hm.get(DcMotor.class, m));
         motorNames.clear();
         return this; // Returns itself for easy chaining
     }
 
-    public MotorGroup setDirection(DcMotor.Direction dir) {
+    protected MotorGroup setDirection(DcMotor.Direction dir) {
         for (DcMotor motor : motors.values()) {
             motor.setDirection(dir);
         }
         return this; // Returns itself for easy chaining
     }
 
-    public void setPower(double power) {
+    protected void setPower(double power) {
         for (DcMotor motor : motors.values()) {
             motor.setPower(power);
         }
     }
 
-    public void setPower(double power, String... _motors) {
+    protected void setPower(double power, String... _motors) {
         for (String m : _motors)
             motors.get(m).setPower(power);
     }
 
-    public DcMotor getMotor(String name) {
+    protected DcMotor getMotor(String name) {
         return motors.get(name);
     }
 

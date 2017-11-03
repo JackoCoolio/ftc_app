@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- * Created by jacktwamb52 on 10/18/2017.
+ * Created by jacktwamb52 on 10/18/2017
  */
 
 @TeleOp(name="Controller Test", group="Test")
