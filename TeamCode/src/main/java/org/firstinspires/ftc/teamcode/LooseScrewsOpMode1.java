@@ -2,13 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 /*
 USING "PHONE 4" AND "RC PHONE"
@@ -26,20 +21,16 @@ public class LooseScrewsOpMode1 extends OpMode {
 //    private ElapsedTime runtime = new ElapsedTime();
 
     //Hardware
-    private DcMotor left_front_drive;
-    private DcMotor right_front_drive;
+//    private DcMotor left_front_drive;
+//    private DcMotor right_front_drive;
+//
+//    private DcMotor left_rear_drive;
+//    private DcMotor right_rear_drive;
+//
+//    private DcMotor left_lift;
+//    private DcMotor right_lift;
 
-    private DcMotor left_rear_drive;
-    private DcMotor right_rear_drive;
-
-    private DcMotor left_lift;
-    private DcMotor right_lift;
-
-    private MotorGroup leftMotors;
-    private MotorGroup rightMotors;
-    private MotorGroup liftMotors;
-
-    private Servo servo;
+    private Robot robot;
 
     private double leftPower;
     private double rightPower;
@@ -47,19 +38,10 @@ public class LooseScrewsOpMode1 extends OpMode {
     @Override
     public void init() {
 
+        robot = new Robot();
+        robot.init(hardwareMap);
+
         telemetry.addData("Status","Initialized");
-
-        leftMotors = new MotorGroup("front_left","rear_left")
-                .initMotors(hardwareMap)
-                .setDirection(DcMotor.Direction.REVERSE);
-
-        rightMotors = new MotorGroup("front_right","rear_right")
-                .initMotors(hardwareMap);
-
-        liftMotors = new MotorGroup("left_lift","right_lift")
-                .initMotors(hardwareMap);
-
-        servo = hardwareMap.get(Servo.class, "servo");
 
     }
 
@@ -72,28 +54,16 @@ public class LooseScrewsOpMode1 extends OpMode {
         leftPower = -gamepad1.left_stick_y;
         rightPower = -gamepad1.right_stick_y;
 
-        liftMotors.setPower(gamepad2.left_stick_y, "left_lift");
-        liftMotors.setPower(gamepad2.right_stick_y, "right_lift");
+        robot.liftMotors.setPower(gamepad2.left_stick_y, "left_lift");
+        robot.liftMotors.setPower(gamepad2.right_stick_y, "right_lift");
 
-        servo.setPosition(gamepad2.right_trigger);
+        robot.servo.setPosition(gamepad2.right_trigger);
 
-        leftMotors.setPower(leftPower);
-        rightMotors.setPower(rightPower);
+        robot.leftMotors.setPower(leftPower);
+        robot.rightMotors.setPower(rightPower);
 
         setTelemetry();
 
-    }
-
-    @Deprecated
-    private void setLeftPower(double pwr) {
-        left_front_drive.setPower(pwr);
-        left_rear_drive.setPower(pwr);
-    }
-
-    @Deprecated
-    private void setRightPower(double pwr) {
-        right_front_drive.setPower(pwr);
-        right_rear_drive.setPower(pwr);
     }
 
     private void setTelemetry() {
@@ -104,52 +74,5 @@ public class LooseScrewsOpMode1 extends OpMode {
         telemetry.addData("Gamepad 2:","Left: " + String.valueOf(gamepad2.left_stick_y) + " Right: " + String.valueOf(gamepad2.right_stick_y));
     }
 
-    @Deprecated
-    private void setAllPower(double pwr, DcMotor... motors) {
-        for (DcMotor motor : motors) {
-            motor.setPower(pwr);
-        }
-    }
-
 }
 
-class MotorGroup {
-
-    private ArrayList<String> motorNames;
-    private HashMap<String, DcMotor> motors;
-
-    protected MotorGroup(String... _names) {
-        motorNames = new ArrayList<>(Arrays.asList(_names));
-        motors = new HashMap<>();
-    }
-
-    protected MotorGroup initMotors(HardwareMap _hm) {
-        for (String m : motorNames)
-            motors.put(m, _hm.get(DcMotor.class, m));
-        motorNames.clear();
-        return this; // Returns itself for easy chaining
-    }
-
-    protected MotorGroup setDirection(DcMotor.Direction _dir) {
-        for (DcMotor motor : motors.values()) {
-            motor.setDirection(_dir);
-        }
-        return this; // Returns itself for easy chaining
-    }
-
-    protected void setPower(double _power) {
-        for (DcMotor motor : motors.values()) {
-            motor.setPower(_power);
-        }
-    }
-
-    protected void setPower(double power, String... _motors) {
-        for (String m : _motors)
-            motors.get(m).setPower(power);
-    }
-
-    protected DcMotor getMotor(String _name) {
-        return motors.get(_name);
-    }
-
-}
