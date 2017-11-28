@@ -23,6 +23,11 @@ public class Lift extends Module {
     }
 
     public void loop() {
+//        if (gamepad2.dpad_up) {
+//            hardware.mainLift.setPower(0.25);
+//        } else if (gamepad2.dpad_down) {
+//            hardware.mainLift.setPower(-0.25);
+//        }
         hardware.motors.setPower(gamepad2.left_stick_y, "left_lift");
         hardware.motors.setPower(gamepad2.right_stick_y, "right_lift");
 

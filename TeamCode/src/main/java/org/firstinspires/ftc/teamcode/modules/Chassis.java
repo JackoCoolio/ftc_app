@@ -31,6 +31,11 @@ public class Chassis extends Module {
         leftPower = -gamepad1.left_stick_y;
         rightPower = -gamepad1.right_stick_y;
 
+        if (gamepad1.left_trigger > 0.25 || gamepad1.right_trigger > 0.25) { //if either trigger is pressed, power is divided by 2 for precision turning
+            leftPower /= 2;
+            rightPower /= 2;
+        }
+
         hardware.leftMotors.setPower(leftPower);
         hardware.rightMotors.setPower(rightPower);
     }

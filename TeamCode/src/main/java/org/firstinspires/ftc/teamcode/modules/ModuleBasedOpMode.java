@@ -17,6 +17,7 @@ public abstract class ModuleBasedOpMode extends OpMode {
     private Module[] modules;
 
     protected abstract void initModules();
+
     protected final void registerModules(Class<? extends Module>... types) {
         this.types = types;
     }
@@ -36,19 +37,20 @@ public abstract class ModuleBasedOpMode extends OpMode {
 
             try {
                 con = clazz.getConstructor(HardwareMap.class, Gamepad.class, Gamepad.class);
+                telemetry.addData("FOUND CONSTRUCTOR FOR", clazz.getSimpleName());
 
                 module = (Module) con.newInstance(hardwareMap, gamepad1, gamepad2);
             } catch (NoSuchMethodException e) {
-                System.out.println("No constructor for " + clazz.getSimpleName() + "!");
+                telemetry.addData("NOSUCHMETHOD ERROR","No constructor for " + clazz.getSimpleName() + "!");
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
-                System.out.println("Constructor for " + clazz.getSimpleName() + " is private!");
+                telemetry.addData("ILLEGALACCESS ERROR","Constructor for " + clazz.getSimpleName() + " is private!");
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                System.out.println("Something went wrong!");
+                telemetry.addData("INVOCATION ERROR","Something went wrong!");
                 e.printStackTrace();
             } catch (InstantiationException e) {
-                System.out.println("Could not instantiate a " + clazz.getSimpleName() + " module!");
+                telemetry.addData("INSTANTIATION ERROR","Could not instantiate a " + clazz.getSimpleName() + " module!");
                 e.printStackTrace();
             }
 
@@ -56,8 +58,15 @@ public abstract class ModuleBasedOpMode extends OpMode {
 
         }
 
-        for (Module module : modules) {
-            module.init();
+        for (int i = 0; i < modules.length; i++) {
+            Module module = modules[i];
+
+            try {
+                module.init();
+                telemetry.addData("FOUND MODULE", module.getClass().getSimpleName());
+            } catch (NullPointerException e) {
+                telemetry.addData("WHAT", "MODULE IS NULL");
+            }
         }
 
         telemetry.addData("Status","Initialized");

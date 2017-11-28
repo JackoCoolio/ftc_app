@@ -19,9 +19,9 @@ public class LiftHardware {
     public DcMotor mainLift;
 
     public LiftHardware(HardwareMap hwMap) {
-        motors = new MotorGroup(hwMap, "lift_left", "right_lift");
+        motors = new MotorGroup(hwMap, "left_lift", "right_lift");
 
-        mainLift = hwMap.get(DcMotor.class, "lift");
+        //mainLift = hwMap.get(DcMotor.class, "lift");
 
         servo = hwMap.get(Servo.class, "servo");
     }

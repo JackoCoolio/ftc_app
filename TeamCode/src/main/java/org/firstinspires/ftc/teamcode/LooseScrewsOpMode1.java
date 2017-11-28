@@ -11,7 +11,11 @@ public class LooseScrewsOpMode1 extends ModuleBasedOpMode {
 
     @Override
     protected void initModules() {
-        registerModules(Chassis.class, Lift.class);
+        if (Chassis.class != null && Lift.class != null) {
+            registerModules(Chassis.class/*, Lift.class*/);
+        } else {
+            telemetry.addData("SOMETHING IS NULL FIX IT PLEASE","THANK YOU");
+        }
     }
 }
 
