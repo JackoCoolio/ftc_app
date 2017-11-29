@@ -9,13 +9,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Created by jacktwamb52 on 11/16/2017.
  */
 
-public abstract class Module {
+abstract class Module {
 
-    HardwareMap hardwareMap;
+    final HardwareMap hardwareMap;
 
-    Gamepad gamepad1, gamepad2;
+    final Gamepad gamepad1, gamepad2;
 
-    public Module(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
+    protected Module(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
         this.hardwareMap = hardwareMap;
 
         this.gamepad1 = gamepad1;

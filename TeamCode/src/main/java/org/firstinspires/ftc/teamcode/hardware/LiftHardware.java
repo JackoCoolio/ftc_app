@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
 public class LiftHardware {
 
-    public Servo servo;
+    public final Servo servo;
 
-    public MotorGroup motors;
+    public final MotorGroup motors;
 
     public DcMotor mainLift;
 
