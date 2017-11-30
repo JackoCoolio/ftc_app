@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.utility.MotorGroup;
-
 /**
  * Created by jacktwamb52 on 11/16/2017.
  */
@@ -14,12 +12,15 @@ public class LiftHardware {
 
     public final Servo servo;
 
-    public final MotorGroup motors;
+    public final DcMotor leftMotor;
+    public final DcMotor rightMotor;
 
     public DcMotor mainLift;
 
     public LiftHardware(HardwareMap hwMap) {
-        motors = new MotorGroup(hwMap, "left_lift", "right_lift");
+
+        leftMotor = hwMap.get(DcMotor.class, "left_lift");
+        rightMotor = hwMap.get(DcMotor.class, "right_lift");
 
         //mainLift = hwMap.get(DcMotor.class, "lift");
 

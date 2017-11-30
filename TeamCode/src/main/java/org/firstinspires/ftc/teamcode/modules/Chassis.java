@@ -16,8 +16,8 @@ public class Chassis extends Module {
 
     private double leftPower, rightPower;
 
-    public Chassis(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
-        super(hardwareMap, gamepad1, gamepad2);
+    public Chassis(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
+        super(hardwareMap, gamepad1, gamepad2, telemetry);
     }
 
     public void init() {
@@ -40,7 +40,7 @@ public class Chassis extends Module {
         hardware.rightMotors.setPower(rightPower);
     }
 
-    public void telemetry(Telemetry telemetry) {
+    public void telemetry() {
         telemetry.addData("Motor Power", "left (%.2f), right (%.2f)", leftPower, rightPower);
         telemetry.addData("Gamepad 1"," Y: " + String.valueOf(gamepad1.y) + " X: " + String.valueOf(gamepad1.a));
     }

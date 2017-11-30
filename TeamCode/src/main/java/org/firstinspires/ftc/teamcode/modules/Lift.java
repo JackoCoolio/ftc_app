@@ -14,8 +14,8 @@ public class Lift extends Module {
 
     private LiftHardware hardware;
 
-    public Lift(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
-        super(hardwareMap, gamepad1, gamepad2);
+    public Lift(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
+        super(hardwareMap, gamepad1, gamepad2, telemetry);
     }
 
     public void init() {
@@ -23,20 +23,21 @@ public class Lift extends Module {
     }
 
     public void loop() {
-        if (gamepad2.dpad_up) {
-            hardware.mainLift.setPower(0.25);
-        } else if (gamepad2.dpad_down) {
-            hardware.mainLift.setPower(-0.25);
-        }
 
-        hardware.motors.setPower(gamepad2.left_stick_y, "left_lift");
-        hardware.motors.setPower(gamepad2.right_stick_y, "right_lift");
+//        if (gamepad1.dpad_up) {
+//            hardware.mainLift.setPower(0.25);
+//        } else if (gamepad1.dpad_down) {
+//            hardware.mainLift.setPower(-0.25);
+//        }
 
-        hardware.servo.setPosition(gamepad2.right_trigger);
+        hardware.leftMotor.setPower(gamepad1.left_stick_y);
+        hardware.rightMotor.setPower(gamepad1.right_stick_y);
+
+        hardware.servo.setPosition(gamepad1.right_trigger);
     }
 
-    public void telemetry(Telemetry telemetry) {
-        telemetry.addData("Gamepad 2:","Left: " + String.valueOf(gamepad2.left_stick_y) + " Right: " + String.valueOf(gamepad2.right_stick_y));
+    public void telemetry() {
+        telemetry.addData("Gamepad 2:","Left: " + String.valueOf(gamepad1.left_stick_y) + " Right: " + String.valueOf(gamepad1.right_stick_y));
     }
 
 }

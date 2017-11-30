@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -50,6 +52,7 @@ public abstract class ModuleBasedOpMode extends OpMode {
 
         telemetry.addData("INITIALIZING MODULES","Initializing OpModes in mode - " + mode.toString());
         if (mode == Mode.Type) {
+
             this.modules = new Module[types.length];
 
             for (int i = 0; i < this.modules.length; i++) {
@@ -58,10 +61,10 @@ public abstract class ModuleBasedOpMode extends OpMode {
                 Module module = null;
 
                 try {
-                    Constructor<?> con = clazz.getConstructor(HardwareMap.class, Gamepad.class, Gamepad.class);
+                    Constructor<?> con = clazz.getConstructor(HardwareMap.class, Gamepad.class, Gamepad.class, Telemetry.class);
                     telemetry.addData("FOUND CONSTRUCTOR", clazz.getSimpleName());
 
-                    module = (Module) con.newInstance(hardwareMap, gamepad1, gamepad2);
+                    module = (Module) con.newInstance(hardwareMap, gamepad1, gamepad2, telemetry);
                 } catch (NoSuchMethodException e) {
                     telemetry.addData("NOSUCHMETHOD ERROR", "No constructor for " + clazz.getSimpleName() + "!");
 
@@ -101,7 +104,7 @@ public abstract class ModuleBasedOpMode extends OpMode {
     public final void loop() {
         for (Module module : modules) {
             module.loop();
-            module.telemetry(telemetry);
+            module.telemetry();
         }
 
         telemetry.addData("Status","Running");
