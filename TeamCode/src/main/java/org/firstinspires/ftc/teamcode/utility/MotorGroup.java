@@ -4,11 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.HashMap;
-
-/**
- * Created by jacktwamb52 on 11/16/2017.
- */
-
 /**
  * Basically a HashMap with some added DcMotor functionality.
  */

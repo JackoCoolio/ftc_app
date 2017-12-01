@@ -5,10 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-/**
- * Created by jacktwamb52 on 11/16/2017.
- */
-
 abstract class Module {
 
     final HardwareMap hardwareMap;

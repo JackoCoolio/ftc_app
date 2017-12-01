@@ -9,10 +9,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * Created by jacktwamb52 on 11/20/2017.
- */
-
 public abstract class ModuleBasedOpMode extends OpMode {
 
     //For easier readability
@@ -25,6 +21,9 @@ public abstract class ModuleBasedOpMode extends OpMode {
 
     private Class<? extends Module>[] types;
     private Module[] modules;
+
+    public static Gamepad gamepadA;
+    public static Gamepad gamepadB;
 
     /**
      * Ideally, this is the only code that has to be written in the 'main' class.
@@ -48,10 +47,13 @@ public abstract class ModuleBasedOpMode extends OpMode {
     @Override
     public final void init() {
 
+        ModuleBasedOpMode.gamepadA = gamepad1;
+        ModuleBasedOpMode.gamepadB = gamepad2;
+
         initModules();
 
         telemetry.addData("INITIALIZING MODULES","Initializing OpModes in mode - " + mode.toString());
-        if (mode == Mode.Type) {
+        if (mode.equals(Mode.Type)) {
 
             this.modules = new Module[types.length];
 
@@ -102,9 +104,9 @@ public abstract class ModuleBasedOpMode extends OpMode {
 
     @Override
     public final void loop() {
-        for (Module module : modules) {
-            module.loop();
-            module.telemetry();
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].loop();
+            modules[i].telemetry();
         }
 
         telemetry.addData("Status","Running");

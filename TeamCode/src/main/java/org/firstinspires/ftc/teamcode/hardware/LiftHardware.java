@@ -4,10 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-/**
- * Created by jacktwamb52 on 11/16/2017.
- */
-
 public class LiftHardware {
 
     public final Servo servo;
@@ -22,7 +18,7 @@ public class LiftHardware {
         leftMotor = hwMap.get(DcMotor.class, "left_lift");
         rightMotor = hwMap.get(DcMotor.class, "right_lift");
 
-        //mainLift = hwMap.get(DcMotor.class, "lift");
+        //mainLift = hwMap.get(DcMotor.class, "winch");
 
         servo = hwMap.get(Servo.class, "servo");
     }
