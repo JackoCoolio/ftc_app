@@ -13,21 +13,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "WorkingDrive")
 public class OpMan extends OpMode {
 
-    DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
-    DcMotor leftLiftMotor, rightLiftMotor, winchMotor;
-    Servo servo;
+    private DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
+    //private DcMotor leftLiftMotor, rightLiftMotor, winchMotor;
+    //private Servo servo;
 
-    double leftDrivePower, rightDrivePower;
-    double leftLiftPower, rightLiftPower;
-    double winchPower;
+    private double leftDrivePower, rightDrivePower;
+    private double leftLiftPower, rightLiftPower;
+    private double winchPower;
 
-    boolean driveSlow = false;
-    boolean liftSlow = false;
+    private boolean driveSlow;
+    private boolean liftSlow;
 
 
     // CONSTANTS //
-    private final double liftPowerMult = 0.5d;
-    private final double drivePowerMult = 0.95d;
+    private final double liftPowerMult = 0.25d;
+    private final double baseLiftSpeed = 0.5d;
+    private final double drivePowerMult = .25d;
+    private final double baseDriveSpeed = 0.95d;
     // CONSTANTS //
 
     @Override
@@ -37,17 +39,17 @@ public class OpMan extends OpMode {
         frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
         rearRightMotor = hardwareMap.get(DcMotor.class, "rear_right");
 
-        leftLiftMotor = hardwareMap.get(DcMotor.class, "left_lift");
-        rightLiftMotor = hardwareMap.get(DcMotor.class, "right_lift");
+        //leftLiftMotor = hardwareMap.get(DcMotor.class, "left_lift");
+        //rightLiftMotor = hardwareMap.get(DcMotor.class, "right_lift");
         //winchMotor = hardwareMap.get(DcMotor.class, "winch");
 
-        servo = hardwareMap.get(Servo.class, "servo");
+        //servo = hardwareMap.get(Servo.class, "servo");
 
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -62,36 +64,36 @@ public class OpMan extends OpMode {
         if (gamepad1.right_bumper || gamepad1.left_bumper)
             driveSlow = true;
 
-        leftDrivePower = gamepad1.left_stick_y * drivePowerMult;
-        rightDrivePower = gamepad1.right_stick_y * drivePowerMult;
+        leftDrivePower = gamepad1.left_stick_y * baseDriveSpeed;
+        rightDrivePower = gamepad1.right_stick_y * baseDriveSpeed;
 
-        if (gamepad2.left_stick_y > 0 || gamepad2.right_stick_y > 0) {
-            leftLiftPower = gamepad2.left_stick_y * liftPowerMult;
-            rightLiftPower = gamepad2.right_stick_y * liftPowerMult;
+        if (gamepad2.left_stick_y != 0 || gamepad2.right_stick_y != 0) {
+            leftLiftPower = gamepad2.left_stick_y * baseLiftSpeed;
+            rightLiftPower = gamepad2.right_stick_y * baseLiftSpeed;
         } else {
             double pwr = 0;
 
             if (gamepad2.y) {
-                pwr = liftPowerMult;
+                pwr = -baseLiftSpeed;
             } else if (gamepad2.a) {
-                pwr = -liftPowerMult;
+                pwr = baseLiftSpeed;
             }
 
             leftLiftPower = pwr;
             rightLiftPower = pwr;
         }
 
-        winchPower = (gamepad2.right_trigger - gamepad2.left_trigger) * liftPowerMult;
+        winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
 
         if (driveSlow) {
-            leftDrivePower /= 2;
-            rightDrivePower /= 2;
+            leftDrivePower *= drivePowerMult;
+            rightDrivePower *= drivePowerMult;
         }
 
         if (liftSlow) {
-            leftLiftPower /= 2;
-            rightLiftPower /= 2;
-            winchPower /= 2;
+            leftLiftPower *= liftPowerMult;
+            rightLiftPower *= liftPowerMult;
+            winchPower *= liftPowerMult;
         }
 
         frontLeftMotor.setPower(leftDrivePower);
@@ -100,15 +102,15 @@ public class OpMan extends OpMode {
         frontRightMotor.setPower(rightDrivePower);
         rearRightMotor.setPower(rightDrivePower);
 
-        leftLiftMotor.setPower(leftLiftPower);
-        rightLiftMotor.setPower(rightLiftPower);
+        //leftLiftMotor.setPower(leftLiftPower);
+        //rightLiftMotor.setPower(rightLiftPower);
 
-        //winchMotor.setPower(winchPower * 0.5);
+        //winchMotor.setPower(winchPower);
 
         if (gamepad2.b) {
-            servo.setPosition(1.0);
+            //servo.setPosition(1);
         } else {
-            servo.setPosition(0.0);
+            //servo.setPosition(0);
         }
 
         telemetry();
@@ -116,6 +118,7 @@ public class OpMan extends OpMode {
     }
 
     private void telemetry() {
+        telemetry.addData("B",String.valueOf(gamepad2.b));
         telemetry.addData("Gamepad 1", "Left Drive: (%.2f), Right Drive: (%.2f)", leftDrivePower, rightDrivePower);
         telemetry.addData("Gamepad 2", "Left Lift: (%.2f), Right Lift: (%.2f), Winch: (%.2f)", leftLiftPower, rightLiftPower, winchPower);
     }
