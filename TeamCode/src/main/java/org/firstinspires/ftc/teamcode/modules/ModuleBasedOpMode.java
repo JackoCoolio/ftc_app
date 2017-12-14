@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -105,6 +106,12 @@ public abstract class ModuleBasedOpMode extends OpMode {
     @Override
     public final void loop() {
         for (int i = 0; i < modules.length; i++) {
+            try {
+                modules[i].gamepad1.copy(gamepad1);
+                modules[i].gamepad2.copy(gamepad2);
+            } catch (RobotCoreException e) {
+                telemetry.addData("ROBOTCORE EXCEPTION ERROR","Something went wrong with the gamepads!");
+            }
             modules[i].loop();
             modules[i].telemetry();
         }

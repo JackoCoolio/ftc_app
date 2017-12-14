@@ -15,14 +15,13 @@ public class ColorSensorTest extends OpMode {
         Blue
     }
 
-    protected Color friendlyColor = Color.Blue;
+    private Color friendlyColor = Color.Blue;
 
     // CONFIG FOR EASY TWEAKING //
     private final double defaultMiddle = 0.5;
     private final double pushDistance = 0.25;
     private final double servoSpeed = 0.001;
-    private final double pushSpeed = 0.001;
-    private final double downPosition = -1;
+    private final double downPosition = -0;
 
     private Servo lrServo;
     private Servo udServo;
@@ -41,16 +40,10 @@ public class ColorSensorTest extends OpMode {
     }
 
     @Override
-    public void start() {
-
-        // Set servo positions.
-        lrServo.setPosition(0);
-        udServo.setPosition(downPosition);
-
-    }
-
-    @Override
     public void loop() {
+
+        telemetry.addData("UD Servo", udServo.getPosition());
+        telemetry.addData("LR Servo", lrServo.getPosition());
 
         // Lower vertical servo.
         udServo.setPosition(lerp(udServo.getPosition(), downPosition, servoSpeed));
@@ -67,7 +60,7 @@ public class ColorSensorTest extends OpMode {
             Color foundColor = determineColor(sensor);
             telemetry.addData("Color", foundColor.toString());
 
-            double push;
+            double push = 0;
             if (foundColor.equals(Color.Unknown)) {
                 push = defaultMiddle;
             } else if (foundColor.equals(friendlyColor)) {

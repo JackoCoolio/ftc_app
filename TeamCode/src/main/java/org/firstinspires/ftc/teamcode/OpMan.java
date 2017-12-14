@@ -4,11 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-
-/**
- * Created by jacktwamb52 on 12/1/2017.
- */
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @TeleOp(name = "WorkingDrive")
 public class OpMan extends OpMode {
@@ -24,6 +20,10 @@ public class OpMan extends OpMode {
     private boolean driveSlow;
     private boolean liftSlow;
 
+    // SENSORS //
+    private TouchSensor topTouch;
+    private TouchSensor bottomTouch;
+    // SENSORS //
 
     // CONSTANTS //
     private final double liftPowerMult = 0.25d;
@@ -45,6 +45,8 @@ public class OpMan extends OpMode {
 
         //servo = hardwareMap.get(Servo.class, "servo");
 
+        topTouch = hardwareMap.touchSensor.get("top_touch");
+        bottomTouch = hardwareMap.touchSensor.get("bottom_touch");
 
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -83,7 +85,14 @@ public class OpMan extends OpMode {
             rightLiftPower = pwr;
         }
 
-        winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
+        double winchControls = gamepad2.right_trigger - gamepad2.left_trigger;
+        if (topTouch.isPressed() && winchControls > 0) {
+            winchPower = 0;
+        } else if (bottomTouch.isPressed() && winchControls < 0) {
+            winchPower = 0;
+        } else {
+            winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
+        }
 
         if (driveSlow) {
             leftDrivePower *= drivePowerMult;
