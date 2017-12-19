@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@TeleOp(name = "WorkingDrive")
+@TeleOp(name = "The one that works")
 public class OpMan extends OpMode {
 
     private DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
-    //private DcMotor leftLiftMotor, rightLiftMotor, winchMotor;
+    private DcMotor leftLiftMotor, rightLiftMotor, liftMotor;
     //private Servo servo;
 
     private double leftDrivePower, rightDrivePower;
@@ -21,8 +20,8 @@ public class OpMan extends OpMode {
     private boolean liftSlow;
 
     // SENSORS //
-    private TouchSensor topTouch;
-    private TouchSensor bottomTouch;
+    //private TouchSensor topTouch;
+    //private TouchSensor bottomTouch;
     // SENSORS //
 
     // CONSTANTS //
@@ -39,19 +38,23 @@ public class OpMan extends OpMode {
         frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
         rearRightMotor = hardwareMap.get(DcMotor.class, "rear_right");
 
-        //leftLiftMotor = hardwareMap.get(DcMotor.class, "left_lift");
-        //rightLiftMotor = hardwareMap.get(DcMotor.class, "right_lift");
-        //winchMotor = hardwareMap.get(DcMotor.class, "winch");
+        leftLiftMotor = hardwareMap.get(DcMotor.class, "left_lift");
+        rightLiftMotor = hardwareMap.get(DcMotor.class, "right_lift");
+
+        liftMotor = hardwareMap.dcMotor.get("lift");
 
         //servo = hardwareMap.get(Servo.class, "servo");
 
-        topTouch = hardwareMap.touchSensor.get("top_touch");
-        bottomTouch = hardwareMap.touchSensor.get("bottom_touch");
+        //topTouch = hardwareMap.touchSensor.get("top_touch");
+        //bottomTouch = hardwareMap.touchSensor.get("bottom_touch");
 
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -85,14 +88,14 @@ public class OpMan extends OpMode {
             rightLiftPower = pwr;
         }
 
-        double winchControls = gamepad2.right_trigger - gamepad2.left_trigger;
-        if (topTouch.isPressed() && winchControls > 0) {
-            winchPower = 0;
-        } else if (bottomTouch.isPressed() && winchControls < 0) {
-            winchPower = 0;
-        } else {
+//        double winchControls = gamepad2.right_trigger - gamepad2.left_trigger;
+//        if (topTouch.isPressed() && winchControls > 0) {
+//            winchPower = 0;
+//        } else if (bottomTouch.isPressed() && winchControls < 0) {
+//            winchPower = 0;
+//        } else {
             winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
-        }
+//        }
 
         if (driveSlow) {
             leftDrivePower *= drivePowerMult;
@@ -105,22 +108,16 @@ public class OpMan extends OpMode {
             winchPower *= liftPowerMult;
         }
 
+        liftMotor.setPower(winchPower);
+
         frontLeftMotor.setPower(leftDrivePower);
         rearLeftMotor.setPower(leftDrivePower);
 
         frontRightMotor.setPower(rightDrivePower);
         rearRightMotor.setPower(rightDrivePower);
 
-        //leftLiftMotor.setPower(leftLiftPower);
-        //rightLiftMotor.setPower(rightLiftPower);
-
-        //winchMotor.setPower(winchPower);
-
-        if (gamepad2.b) {
-            //servo.setPosition(1);
-        } else {
-            //servo.setPosition(0);
-        }
+        leftLiftMotor.setPower(leftLiftPower);
+        rightLiftMotor.setPower(rightLiftPower);
 
         telemetry();
 
