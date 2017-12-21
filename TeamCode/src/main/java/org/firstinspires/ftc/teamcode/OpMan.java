@@ -5,12 +5,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.utility.MotorGroup;
+
 @TeleOp(name = "The one that works")
 public class OpMan extends OpMode {
 
     private DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
     private DcMotor leftLiftMotor, rightLiftMotor, liftMotor;
     //private Servo servo;
+
+    private MotorGroup leftMotors;
+    private MotorGroup rightMotors;
+    private MotorGroup liftMotors;
+    private DcMotor lift;
 
     private double leftDrivePower, rightDrivePower;
     private double leftLiftPower, rightLiftPower;
@@ -56,6 +63,26 @@ public class OpMan extends OpMode {
 
         leftLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rearRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        /*
+
+        What I plan to switch to. As you can see, it's much more concise.
+
+        (leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        (rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right")).setMode(DcMotor.RunMode.RUN_USING_ENCODER).setDirection(DcMotor.Direction.REVERSE);
+        (liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        leftMotors.getMotor("rear_left").setDirection(DcMotor.Direction.REVERSE); // Individual tweaking and value-setting is possible.
+        liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.REVERSE);
+        */
+
     }
 
     @Override
@@ -94,7 +121,7 @@ public class OpMan extends OpMode {
 //        } else if (bottomTouch.isPressed() && winchControls < 0) {
 //            winchPower = 0;
 //        } else {
-            winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
+        winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
 //        }
 
         if (driveSlow) {

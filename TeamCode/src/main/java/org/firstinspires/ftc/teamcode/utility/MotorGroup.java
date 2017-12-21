@@ -15,14 +15,14 @@ public class MotorGroup {
         motors = new HashMap<>();
 
         for (String m : _names)
-            motors.put(m, _hm.get(DcMotor.class, m));
+            motors.put(m, _hm.dcMotor.get(m));
     }
 
     public MotorGroup setDirection(DcMotor.Direction _dir) {
         for (DcMotor motor : motors.values()) {
             motor.setDirection(_dir);
         }
-        return this; // Returns itself for easy chaining
+        return this; // Returns itself for easy chaining.
     }
 
     public void setPower(double _power) {
@@ -38,6 +38,13 @@ public class MotorGroup {
 
     public DcMotor getMotor(String _name) {
         return motors.get(_name);
+    }
+
+    public MotorGroup setMode(DcMotor.RunMode mode) {
+        for (DcMotor motor : motors.values()) {
+            motor.setMode(mode);
+        }
+        return this; // Returns itself for easy chaining.
     }
 
 }
