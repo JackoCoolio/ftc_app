@@ -121,3 +121,96 @@ public abstract class ModuleBasedOpMode extends OpMode {
     }
 
 }
+
+abstract class BetterVersionOfThis extends OpMode {
+
+    private Class<? extends Module>[] types;
+    private Module[] modules;
+
+    /**
+     * Ideally, this is the only code that has to be written in the 'main' class.
+     *
+     */
+    protected void initModules() {
+        telemetry.addData("MODULE INITIALIZATION ERROR","No modules initialized!");
+    }
+
+    protected final void registerModules(Class<? extends Module>... types) {
+        telemetry.addData("INITIALIZING MODULES","Modules set.");
+        this.types = types;
+    }
+
+    @Override
+    public final void init() {
+
+        ModuleBasedOpMode.gamepadA = gamepad1;
+        ModuleBasedOpMode.gamepadB = gamepad2;
+
+        initModules();
+
+        telemetry.addData("INITIALIZING MODULES","Initializing OpModes");
+
+        this.modules = new Module[types.length];
+
+        for (int i = 0; i < this.modules.length; i++) {
+
+            Class<? extends Module> clazz = types[i];
+            Module module = null;
+
+            try {
+                Constructor<?> con = clazz.getConstructor(ModuleParameters.class);
+                telemetry.addData("FOUND CONSTRUCTOR", clazz.getSimpleName());
+
+                ModuleParameters parameters = new ModuleParameters(hardwareMap, telemetry, gamepad1, gamepad2);
+                module = (Module) con.newInstance(parameters);
+            } catch (NoSuchMethodException e) {
+                telemetry.addData("NOSUCHMETHOD ERROR", "No constructor for " + clazz.getSimpleName() + "!");
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                telemetry.addData("ILLEGALACCESS ERROR", "Constructor for " + clazz.getSimpleName() + " is private!");
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                telemetry.addData("INVOCATION ERROR", "Something went wrong!");
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                telemetry.addData("INSTANTIATION ERROR", "Could not instantiate a " + clazz.getSimpleName() + " module!");
+                e.printStackTrace();
+            }
+
+            modules[i] = module;
+
+        }
+
+        for (int i = 0; i < this.modules.length; i++) {
+            Module module = this.modules[i];
+
+            try {
+                module.init();
+                telemetry.addData("FOUND MODULE", module.getClass().getSimpleName());
+            } catch (NullPointerException e) {
+                telemetry.addData("MODULE INITIALIZATION ERROR", "A module is null!");
+            }
+        }
+
+        telemetry.addData("Status","Initialized");
+
+    }
+
+    @Override
+    public final void loop() {
+        for (int i = 0; i < modules.length; i++) {
+            try {
+                modules[i].gamepad1.copy(gamepad1);
+                modules[i].gamepad2.copy(gamepad2);
+            } catch (RobotCoreException e) {
+                telemetry.addData("ROBOTCORE EXCEPTION ERROR","Something went wrong with the gamepads!");
+            }
+            modules[i].loop();
+            modules[i].telemetry();
+        }
+
+        telemetry.addData("Status","Running");
+        telemetry.addData("Runtime", getRuntime());
+    }
+
+}

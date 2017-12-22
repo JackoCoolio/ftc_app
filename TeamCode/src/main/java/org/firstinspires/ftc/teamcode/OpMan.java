@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 @TeleOp(name = "The one that works")
 public class OpMan extends OpMode {
 
-    private DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
-    private DcMotor leftLiftMotor, rightLiftMotor, liftMotor;
+    //private DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
+    //private DcMotor leftLiftMotor, rightLiftMotor, liftMotor;
     //private Servo servo;
 
     private MotorGroup leftMotors;
@@ -33,55 +33,38 @@ public class OpMan extends OpMode {
 
     // CONSTANTS //
     private final double liftPowerMult = 0.25d;
-    private final double baseLiftSpeed = 0.5d;
+    private final double baseLiftSpeed = 0.1d;
     private final double drivePowerMult = .25d;
     private final double baseDriveSpeed = 0.95d;
     // CONSTANTS //
 
     @Override
     public void init() {
-        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
-        rearLeftMotor = hardwareMap.get(DcMotor.class, "rear_left");
-        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
-        rearRightMotor = hardwareMap.get(DcMotor.class, "rear_right");
-
-        leftLiftMotor = hardwareMap.get(DcMotor.class, "left_lift");
-        rightLiftMotor = hardwareMap.get(DcMotor.class, "right_lift");
-
-        liftMotor = hardwareMap.dcMotor.get("lift");
+//        frontLeftMotor = hardwareMap.get(DcMotor.class, "front_left");
+//        rearLeftMotor = hardwareMap.get(DcMotor.class, "rear_left");
+//        frontRightMotor = hardwareMap.get(DcMotor.class, "front_right");
+//        rearRightMotor = hardwareMap.get(DcMotor.class, "rear_right");
+//
+//        leftLiftMotor = hardwareMap.get(DcMotor.class, "left_lift");
+//        rightLiftMotor = hardwareMap.get(DcMotor.class, "right_lift");
+//
+        lift = hardwareMap.dcMotor.get("lift");
 
         //servo = hardwareMap.get(Servo.class, "servo");
 
         //topTouch = hardwareMap.touchSensor.get("top_touch");
         //bottomTouch = hardwareMap.touchSensor.get("bottom_touch");
 
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rearLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rightLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left");
+        rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right");
+        liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift");
 
-        leftLiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rearLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rearRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightLiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        /*
-
-        What I plan to switch to. As you can see, it's much more concise.
-
-        (leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        (rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right")).setMode(DcMotor.RunMode.RUN_USING_ENCODER).setDirection(DcMotor.Direction.REVERSE);
-        (liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        leftMotors.getMotor("rear_left").setDirection(DcMotor.Direction.REVERSE); // Individual tweaking and value-setting is possible.
+        leftMotors.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.REVERSE);
-        */
 
     }
 
@@ -121,7 +104,13 @@ public class OpMan extends OpMode {
 //        } else if (bottomTouch.isPressed() && winchControls < 0) {
 //            winchPower = 0;
 //        } else {
-        winchPower = (gamepad2.right_trigger - gamepad2.left_trigger);
+        if (gamepad2.dpad_up) {
+            winchPower = 1;
+        } else if (gamepad2.dpad_down) {
+            winchPower = -1;
+        } else {
+            winchPower = 0;
+        }
 //        }
 
         if (driveSlow) {
@@ -135,16 +124,13 @@ public class OpMan extends OpMode {
             winchPower *= liftPowerMult;
         }
 
-        liftMotor.setPower(winchPower);
+        lift.setPower(winchPower);
 
-        frontLeftMotor.setPower(leftDrivePower);
-        rearLeftMotor.setPower(leftDrivePower);
+        leftMotors.setPower(leftDrivePower);
+        rightMotors.setPower(rightDrivePower);
 
-        frontRightMotor.setPower(rightDrivePower);
-        rearRightMotor.setPower(rightDrivePower);
-
-        leftLiftMotor.setPower(leftLiftPower);
-        rightLiftMotor.setPower(rightLiftPower);
+        liftMotors.getMotor("left_lift").setPower(leftLiftPower);
+        liftMotors.getMotor("right_lift").setPower(rightLiftPower);
 
         telemetry();
 

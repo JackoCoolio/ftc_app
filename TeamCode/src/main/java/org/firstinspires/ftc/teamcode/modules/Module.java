@@ -22,6 +22,14 @@ abstract class Module {
         init();
     }
 
+    protected Module(ModuleParameters parameters) {
+        this.hardwareMap = parameters.hardwareMap;
+        this.gamepad1 = parameters.gamepad1;
+        this.gamepad2 = parameters.gamepad2;
+        this.telemetry = parameters.telemetry;
+        init();
+    }
+
     public abstract void init();
     public abstract void loop();
     public abstract void telemetry();

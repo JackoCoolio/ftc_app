@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utility;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.HashMap;
@@ -23,6 +24,15 @@ public class MotorGroup {
             motor.setDirection(_dir);
         }
         return this; // Returns itself for easy chaining.
+    }
+
+    public void flip() {
+        for (DcMotor motor : motors.values()) {
+            if (motor.getDirection().equals(DcMotorSimple.Direction.FORWARD))
+                motor.setDirection(DcMotorSimple.Direction.REVERSE);
+            else
+                motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
     }
 
     public void setPower(double _power) {
