@@ -137,7 +137,6 @@ public class OpMan extends OpMode {
     }
 
     private void telemetry() {
-        telemetry.addData("B",String.valueOf(gamepad2.b));
         telemetry.addData("Gamepad 1", "Left Drive: (%.2f), Right Drive: (%.2f)", leftDrivePower, rightDrivePower);
         telemetry.addData("Gamepad 2", "Left Lift: (%.2f), Right Lift: (%.2f), Winch: (%.2f)", leftLiftPower, rightLiftPower, winchPower);
     }
