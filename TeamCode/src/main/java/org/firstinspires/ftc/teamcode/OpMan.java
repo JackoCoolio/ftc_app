@@ -10,6 +10,25 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 @TeleOp(name = "The one that works")
 public class OpMan extends OpMode {
 
+    /*
+    Mapping:
+      Drivetrain:
+        -front_left
+        -front_right
+        -rear_left
+        -rear_right
+      Lift:
+        -lift
+        -left_lift
+        -right_lift
+      Servo arm:
+        -up_down
+        -left_right
+      Sensors:
+        -color
+        -gyro?
+     */
+
     //private DcMotor frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor;
     //private DcMotor leftLiftMotor, rightLiftMotor, liftMotor;
     //private Servo servo;
