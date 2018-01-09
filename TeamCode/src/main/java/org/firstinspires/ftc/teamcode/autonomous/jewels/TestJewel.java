@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.autonomous.jewels;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @Autonomous(name="ServoArm")
 public class TestJewel extends OpMode {
+
+    private Robot robot;
 
     private enum Color {
         Unknown,
@@ -20,14 +23,9 @@ public class TestJewel extends OpMode {
     // CONFIG FOR EASY TWEAKING //
     private final double defaultMiddle = 0.5;
     private final double pushDistance = 0.25;
-    private final double servoSpeed = 0.001;
-    private final double pushSpeed = 0.001;
+    private final double servoSpeed = 0.02;
     private final double downPosition = 1;
-
-    private Servo lrServo;
-    private Servo udServo;
-
-    private ColorSensor sensor;
+    private final double upPosition = 0.1;
 
     private boolean pushed = false;
     private ElapsedTime timer = new ElapsedTime();
@@ -35,8 +33,7 @@ public class TestJewel extends OpMode {
     @Override
     public void init() {
 
-        // Load hardware.
-        initHardware();
+        robot = new Robot(hardwareMap);
 
     }
 
@@ -44,8 +41,8 @@ public class TestJewel extends OpMode {
     public void start() {
 
         // Set servo positions.
-        lrServo.setPosition(0);
-        udServo.setPosition(downPosition);
+        robot.lrServo.setPosition(defaultMiddle);
+        robot.udServo.setPosition(downPosition);
 
     }
 
@@ -53,52 +50,40 @@ public class TestJewel extends OpMode {
     public void loop() {
 
         // Lower vertical servo.
-        udServo.setPosition(lerp(udServo.getPosition(), downPosition, servoSpeed));
+        robot.udServo.setPosition(lerp(robot.udServo.getPosition(), downPosition, servoSpeed));
 
         // Useful debug information.
         telemetry.addData("Pushed",String.valueOf(pushed));
-        telemetry.addData("Red",sensor.red());
-        telemetry.addData("Green",sensor.green());
-        telemetry.addData("Blue",sensor.blue());
+        telemetry.addData("Red",robot.colorSensor.red());
+        telemetry.addData("Green",robot.colorSensor.green());
+        telemetry.addData("Blue",robot.colorSensor.blue());
 
 
 
         if (!pushed) {
-            Color foundColor = determineColor(sensor);
+            Color foundColor = determineColor(robot.colorSensor);
             telemetry.addData("Color", foundColor.toString());
 
             double push;
             if (foundColor.equals(Color.Unknown)) {
                 push = defaultMiddle;
             } else if (foundColor.equals(friendlyColor)) {
-                push = defaultMiddle + pushDistance;
-                pushed = true;
-            } else {
                 push = defaultMiddle - pushDistance;
                 pushed = true;
+            } else {
+                push = defaultMiddle + pushDistance;
+                pushed = true;
             }
-
-
-            //lrServo.setPosition(lerp(lrServo.getPosition(), push, pushSpeed));
-            lrServo.setPosition(push);
+            robot.lrServo.setPosition(push);
             timer.reset();
 
         } else {
+            if (timer.seconds() > 2.25)
+                robot.udServo.setPosition(lerp(robot.udServo.getPosition(), upPosition, servoSpeed * 3));
+
             if (timer.seconds() > 1.5)
-                udServo.setPosition(lerp(udServo.getPosition(), 0.5, servoSpeed * 3));
-
-            if (timer.seconds() > 3)
-                lrServo.setPosition(lerp(lrServo.getPosition(), 0.5, servoSpeed));
+                robot.lrServo.setPosition(lerp(robot.lrServo.getPosition(), defaultMiddle, servoSpeed / 5));
         }
-
-    }
-
-    private void initHardware() {
-
-        lrServo = hardwareMap.servo.get("left_right");
-        udServo = hardwareMap.servo.get("up_down");
-
-        sensor = hardwareMap.colorSensor.get("sensor");
 
     }
 
