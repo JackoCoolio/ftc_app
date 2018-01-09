@@ -61,7 +61,7 @@ public class OpMan extends OpMode {
 
         leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left");
         rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right");
-        liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift");
+        (liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftMotors.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.REVERSE);
