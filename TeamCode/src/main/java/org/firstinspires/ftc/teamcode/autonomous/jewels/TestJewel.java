@@ -22,7 +22,7 @@ public class TestJewel extends OpMode {
     private final double pushDistance = 0.25;
     private final double servoSpeed = 0.001;
     private final double pushSpeed = 0.001;
-    private final double downPosition = -1;
+    private final double downPosition = 1;
 
     private Servo lrServo;
     private Servo udServo;
