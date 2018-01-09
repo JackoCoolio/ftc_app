@@ -1,32 +1,32 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.jewels;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="ServoArm")
-public class ColorSensorTest extends OpMode {
+@Autonomous(name="Red Jewel")
+public class RedJewel extends OpMode {
 
-    private enum Color {
+    public enum Color {
         Unknown,
         Red,
         Blue
     }
 
-    private Color friendlyColor = Color.Blue;
+    private Color friendlyColor = Color.Red;
 
     // CONFIG FOR EASY TWEAKING //
     private final double defaultMiddle = 0.5;
     private final double pushDistance = 0.25;
     private final double servoSpeed = 0.001;
     private final double downPosition = -0;
+    private final double upPosition = 0.5;
 
     private Servo lrServo;
     private Servo udServo;
 
-    private ColorSensor sensor;
+    private com.qualcomm.robotcore.hardware.ColorSensor sensor;
 
     private boolean pushed = false;
     private ElapsedTime timer = new ElapsedTime();
@@ -37,6 +37,12 @@ public class ColorSensorTest extends OpMode {
         // Load hardware.
         initHardware();
 
+    }
+
+    @Override
+    public void init_loop() {
+        udServo.setPosition(lerp(udServo.getPosition(), upPosition, servoSpeed));
+        lrServo.setPosition(lerp(lrServo.getPosition(), defaultMiddle, servoSpeed));
     }
 
     @Override
@@ -91,7 +97,7 @@ public class ColorSensorTest extends OpMode {
         lrServo = hardwareMap.servo.get("left_right");
         udServo = hardwareMap.servo.get("up_down");
 
-        sensor = hardwareMap.colorSensor.get("sensor");
+        sensor = hardwareMap.colorSensor.get("color");
 
     }
 
@@ -115,7 +121,7 @@ public class ColorSensorTest extends OpMode {
 
     }
 
-    private Color determineColor(ColorSensor sensor) {
+    private Color determineColor(com.qualcomm.robotcore.hardware.ColorSensor sensor) {
 
         if (sensor.red() > sensor.green() + sensor.blue()) {
             return Color.Red;
