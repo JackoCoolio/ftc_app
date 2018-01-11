@@ -1,33 +1,68 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 /**
  * Created by jacktwamb52 on 1/10/2018.
  */
 
+@Autonomous(name = "LKSAJDLAKSJDASKJD")
 public class imuautotest extends IMUAutonomous {
 
     Robot robot;
 
-    double startAngle;
-
     @Override
-    public ArrayList<Callable<Boolean>> setStages() {
+    public Stage[] setStages() {
 
         robot = new Robot(hardwareMap);
 
-        ArrayList<Callable<Boolean>> stageList = new ArrayList<>();
+        Stage[] stageList = new Stage[] {
+                new Stage() {
 
-        stageList.set(0, new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
+                    double startHeading;
 
-            }
-        });
+                    public void setup(Orientation angles) {
+                        startHeading = angles.firstAngle;
+                    }
+
+                    public boolean run(Orientation angles) {
+                        if (angles.firstAngle > startHeading + 90) {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
+                            return true;
+                        } else {
+                            robot.leftMotors.setPower(0.95);
+                            robot.rightMotors.setPower(-0.95);
+                            return false;
+                        }
+                    }
+                },
+                new Stage() {
+
+                    double startHeading;
+
+                    public void setup(Orientation angles) {
+                        startHeading = angles.firstAngle;
+                    }
+
+                    public boolean run(Orientation angles) {
+                        if (angles.firstAngle < startHeading - 90) {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
+                            return true;
+                        } else {
+                            robot.leftMotors.setPower(-0.95);
+                            robot.rightMotors.setPower(0.95);
+                            return false;
+                        }
+                    }
+                }
+        };
+
+
 
         return stageList;
     }

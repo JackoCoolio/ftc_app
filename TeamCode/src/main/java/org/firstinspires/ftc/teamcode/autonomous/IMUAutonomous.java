@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by jacktwamb52 on 1/10/2018.
@@ -16,30 +19,43 @@ public abstract class IMUAutonomous extends OpMode {
     private int stage = 0;
     protected BNO055IMU imu;
 
-    private ArrayList<Callable<Boolean>> stages;
+    private Stage[] stages;
+    boolean runSetup = true;
+
+    private ElapsedTime runtime;
 
     @Override public final void start() {
         stages = setStages();
+        runtime.reset();
     }
 
     @Override public final void init() {
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU".
         imu = hardwareMap.get(BNO055IMU.class, getIMUName());
         imu.initialize(getParameters());
+        runtime = new ElapsedTime();
     }
 
     @Override public final void loop() {
+
+        if (stage == stages.length) return;
+
         boolean cont;
 
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
         try {
-            cont = stages.get(stage).call();
+            if (runSetup) stages[stage].setup(angles, runtime);
+            cont = stages[stage].run(angles, runtime);
         } catch (Exception e) {
             cont = false;
             telemetry.addData("ERROR","An exception occurred in user code!");
         }
 
-        if (cont) stage++;
+        runSetup = false;
+        if (cont) {
+            stage++;
+            runSetup = true;
+        }
     }
 
     protected String getIMUName() {
@@ -61,6 +77,11 @@ public abstract class IMUAutonomous extends OpMode {
         return parameters;
     }
 
-    public abstract ArrayList<Callable<Boolean>> setStages();
+    public abstract Stage[] setStages();
+
+    public interface Stage {
+        void setup(Orientation angles, ElapsedTime runtime);
+        boolean run(Orientation angles, ElapsedTime runtime);
+    }
 
 }

@@ -46,6 +46,12 @@ public class MotorGroup {
             motors.get(m).setPower(power);
     }
 
+    public void zero() {
+        for (DcMotor m : motors.values()) {
+            m.setPower(0d);
+        }
+    }
+
     public DcMotor getMotor(String _name) {
         return motors.get(_name);
     }
