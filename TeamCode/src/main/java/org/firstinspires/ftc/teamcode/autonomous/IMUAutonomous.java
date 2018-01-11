@@ -44,8 +44,8 @@ public abstract class IMUAutonomous extends OpMode {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         try {
-            if (runSetup) stages[stage].setup(angles, runtime);
-            cont = stages[stage].run(angles, runtime);
+            if (runSetup) stages[stage].setup(angles.firstAngle, runtime);
+            cont = stages[stage].run(angles.firstAngle, runtime);
         } catch (Exception e) {
             cont = false;
             telemetry.addData("ERROR","An exception occurred in user code!");
@@ -80,8 +80,8 @@ public abstract class IMUAutonomous extends OpMode {
     public abstract Stage[] setStages();
 
     public interface Stage {
-        void setup(Orientation angles, ElapsedTime runtime);
-        boolean run(Orientation angles, ElapsedTime runtime);
+        void setup(double heading, ElapsedTime runtime);
+        boolean run(double heading, ElapsedTime runtime);
     }
 
 }

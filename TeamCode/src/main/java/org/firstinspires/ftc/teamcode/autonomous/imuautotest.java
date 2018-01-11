@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 /**
@@ -24,12 +24,12 @@ public class imuautotest extends IMUAutonomous {
 
                     double startHeading;
 
-                    public void setup(Orientation angles) {
-                        startHeading = angles.firstAngle;
+                    public void setup(double heading, ElapsedTime runtime) {
+                        startHeading = heading;
                     }
 
-                    public boolean run(Orientation angles) {
-                        if (angles.firstAngle > startHeading + 90) {
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (heading > startHeading + 90) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;
@@ -44,12 +44,12 @@ public class imuautotest extends IMUAutonomous {
 
                     double startHeading;
 
-                    public void setup(Orientation angles) {
-                        startHeading = angles.firstAngle;
+                    public void setup(double heading, ElapsedTime runtime) {
+                        startHeading = heading;
                     }
 
-                    public boolean run(Orientation angles) {
-                        if (angles.firstAngle < startHeading - 90) {
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (heading < startHeading - 90) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;
