@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.util.Log;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 
 import org.firstinspires.ftc.teamcode.utility.AdafruitIMU;
@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.utility.AdafruitIMU;
  * Created by jacktwamb52 on 1/3/2018.
  */
 
-@Autonomous(name = "GyroTest")
+@TeleOp(name = "GyroTest")
 public class GyroTest extends OpMode {
 
     AdafruitIMU gyro;
@@ -40,9 +40,13 @@ public class GyroTest extends OpMode {
      */
     @Override
     public void init() {
+        this.msStuckDetectInit = 30000;
+        telemetry.addData("...","Setting systemTime");
         systemTime = System.nanoTime();
+
+        telemetry.addData("...","Initializing IMU.");
         try {
-            boschBNO055 = new AdafruitIMU(hardwareMap, "gyro"
+            boschBNO055 = new AdafruitIMU(hardwareMap, "bno055"
 
                     //The following was required when the definition of the "I2cDevice" class was incomplete.
                     //, "cdim", 5
