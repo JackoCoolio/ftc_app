@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
  * Created by jacktwamb52 on 1/10/2018.
  */
 
-@Autonomous(name = "LKSAJDLAKSJDASKJD")
+@Autonomous(name = "imaautotest")
 public class imuautotest extends IMUAutonomous {
 
     Robot robot;
