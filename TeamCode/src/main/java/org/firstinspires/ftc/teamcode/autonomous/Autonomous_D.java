@@ -27,11 +27,12 @@ public class Autonomous_D extends IMUAutonomous
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         jewelHitter = new JewelHitter(robot, friendlyColor);
+                        jewelHitter.start();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        return jewelHitter.run(telemetry);
+                        return jewelHitter.run();
                     }
                 },
                 new Stage()
