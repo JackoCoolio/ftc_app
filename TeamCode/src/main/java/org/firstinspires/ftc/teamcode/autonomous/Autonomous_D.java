@@ -19,6 +19,21 @@ public class Autonomous_D extends IMUAutonomous
         robot = new Robot(hardwareMap);
 
         Stage[] stageList = new Stage[]{
+                new Stage() { // Jewel hitter
+
+                    JewelHitter jewelHitter;
+                    JewelHitter.Color friendlyColor = JewelHitter.Color.Blue;
+
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        jewelHitter = new JewelHitter(robot, friendlyColor);
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        return jewelHitter.run(telemetry);
+                    }
+                },
                 new Stage()
                 {
                     @Override
