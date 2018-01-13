@@ -78,9 +78,11 @@ public class Autonomous_A extends IMUAutonomous
                     }
                 },
 
-                new Stage() {
+                new Stage()
+                {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
 
                     }
 
@@ -96,9 +98,11 @@ public class Autonomous_A extends IMUAutonomous
 
                     }
                 },
-                new Stage() {
+                new Stage()
+                {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
 
                     }
 

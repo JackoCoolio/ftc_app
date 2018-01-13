@@ -22,17 +22,35 @@ public class Autonomous_B extends IMUAutonomous {
         robot = new Robot(hardwareMap);
 
         Stage[] stageList = new Stage[]{
-        new Stage()
-        {
-            @Override
-            public void setup(double heading, ElapsedTime runtime) {
-                runtime.reset();
 
-            }
+                new Stage() { // Jewel hitter
+
+                    JewelHitter jewelHitter;
+
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        jewelHitter = new JewelHitter(robot, JewelHitter.Color.Blue);
+
+                        jewelHitter.start();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        return jewelHitter.run();
+                    }
+                },
+              new Stage()
+                   {
+                   @Override
+                   public void setup(double heading, ElapsedTime runtime) {
+                    runtime.reset();
+
+                   }
+
 
             @Override
             public boolean run(double heading, ElapsedTime runtime) {
-                if (runtime.seconds() < 4) {
+                if (runtime.seconds() < 6) {
                     robot.leftMotors.setPower(-0.2);
                     robot.rightMotors.setPower(-0.2);
                     return false;
@@ -58,18 +76,20 @@ public class Autonomous_B extends IMUAutonomous {
                             robot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(0.95);
-                            robot.rightMotors.setPower(-0.95);
+                            robot.leftMotors.setPower(0.1);
+                            robot.rightMotors.setPower(-0.1);
                             return false;
                         }
                     }
                 },
 
-        new Stage() {
-            @Override
-            public void setup(double heading, ElapsedTime runtime) {
+                new Stage()
+                {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
 
-            }
+                    }
 
             @Override
             public boolean run(double heading, ElapsedTime runtime) {
@@ -83,9 +103,11 @@ public class Autonomous_B extends IMUAutonomous {
 
             }
         },
-                new Stage() {
+                new Stage()
+                {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
 
                     }
 
