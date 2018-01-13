@@ -54,6 +54,8 @@ public abstract class IMUAutonomous extends OpMode {
 
     @Override public final void init() {
 
+        vuforia = new Vuforia();
+
         setVuMarkAngles();
 
         imu = hardwareMap.get(BNO055IMU.class, getIMUName());
