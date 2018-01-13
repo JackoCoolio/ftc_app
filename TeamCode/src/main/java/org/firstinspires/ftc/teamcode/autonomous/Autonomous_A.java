@@ -5,9 +5,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
-/**
- * Created by ebenseshe53 on 1/11/2018.
- */
 @Autonomous (name = "Autonomous A")
 public class Autonomous_A extends IMUAutonomous
 {
@@ -18,33 +15,13 @@ public class Autonomous_A extends IMUAutonomous
 
         robot = new Robot(hardwareMap);
 
-        Stage[] stageList = new Stage[]{
-                new Stage() { // Jewel hitter
+        return new Stage[]{
+                JewelHitter.getStage(robot, JewelHitter.Color.Blue), // So you don't have to copy and paste each time.
+                new Stage() {// Drive off platform.
 
-                    JewelHitter jewelHitter;
-                    JewelHitter.Color friendlyColor = JewelHitter.Color.Blue;
+                    @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
-                    @Override
-                    public void setup(double heading, ElapsedTime runtime) {
-                        jewelHitter = new JewelHitter(robot, friendlyColor);
-                        jewelHitter.start();
-                    }
-
-                    @Override
-                    public boolean run(double heading, ElapsedTime runtime) {
-                        return jewelHitter.run();
-                    }
-                },
-                new Stage()
-                {
-                    @Override
-                    public void setup(double heading, ElapsedTime runtime) {
-                        runtime.reset();
-
-                    }
-
-                    @Override
-                    public boolean run(double heading, ElapsedTime runtime) {
+                    @Override public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < 4) {
                             robot.leftMotors.setPower(0.2);
                             robot.rightMotors.setPower(0.2);
@@ -56,38 +33,30 @@ public class Autonomous_A extends IMUAutonomous
                         }
                     }
                 },
-
-                new Stage() {
+                new Stage() { // Turn towards correct slot.
 
                     double startHeading;
+                    double target = getTargetAngle("A");
 
-                    public void setup(double heading, ElapsedTime runtime) {
-                        startHeading = heading;
-                    }
+                    public void setup(double heading, ElapsedTime runtime) { startHeading = heading; }
 
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading > startHeading + 65) {
+                        if (heading > startHeading + target) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(0.95);
-                            robot.rightMotors.setPower(-0.95);
+                            robot.leftMotors.setPower(-0.95);
+                            robot.rightMotors.setPower(0.95);
                             return false;
                         }
                     }
                 },
+                new Stage() { // Drive towards slot.
 
-                new Stage()
-                {
-                    @Override
-                    public void setup(double heading, ElapsedTime runtime) {
-                        runtime.reset();
+                    @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
-                    }
-
-                    @Override
-                    public boolean run(double heading, ElapsedTime runtime) {
+                    @Override public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < 4) {
                             robot.liftMotors.setPower(.95);
                             return false;
@@ -98,29 +67,20 @@ public class Autonomous_A extends IMUAutonomous
 
                     }
                 },
-                new Stage()
-                {
-                    @Override
-                    public void setup(double heading, ElapsedTime runtime) {
-                        runtime.reset();
+                new Stage() { // Run lifts.
 
-                    }
+                    @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
-                    @Override
-                    public boolean run(double heading, ElapsedTime runtime) {
+                    @Override public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < 1) {
-                            robot.leftMotors.setPower(.25);
-                            robot.rightMotors.setPower(.25);
+                            robot.liftMotors.setPower(0.95d);
                             return false;
                         } else {
                             robot.liftMotors.zero();
                             return true;
                         }
-
                     }
                 },
         };
-
-        return stageList;
     }
 }

@@ -32,18 +32,18 @@ public abstract class IMUAutonomous extends OpMode {
      */
 
     private int stage = 0;
-    protected BNO055IMU imu;
+    private BNO055IMU imu;
 
     protected boolean foundVuMark = false;
-    protected RelicRecoveryVuMark vuMark;
+    private RelicRecoveryVuMark vuMark;
     private Vuforia vuforia;
 
     private Stage[] stages;
-    boolean runSetup = true;
+    private boolean runSetup = true;
 
     private ElapsedTime runtime;
 
-    HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
+    private HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
 
     @Override public final void start() {
         stages = setStages();
@@ -54,23 +54,7 @@ public abstract class IMUAutonomous extends OpMode {
 
     @Override public final void init() {
 
-//        vuMarkAngles = new HashMap<>();
-//
-//        vuMarkAngles.put("A", new HashMap<RelicRecoveryVuMark, Double>());
-//        vuMarkAngles.put("B", new HashMap<RelicRecoveryVuMark, Double>());
-//        vuMarkAngles.put("C", new HashMap<RelicRecoveryVuMark, Double>());
-//        vuMarkAngles.put("D", new HashMap<RelicRecoveryVuMark, Double>());
-//
-//        vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, -50d);
-//        vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, -40d);
-//        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, -30d);
-//
-//        vuMarkAngles.get("B").put()
-        /*
-        ASSIGN VUMARKANGLES HERE.
-         */
-
-
+        setVuMarkAngles();
 
         imu = hardwareMap.get(BNO055IMU.class, getIMUName());
         imu.initialize(getParameters());
@@ -81,7 +65,8 @@ public abstract class IMUAutonomous extends OpMode {
 
     @Override public final void loop() {
 
-        vuforia.loop(telemetry);
+        if (!vuforia.loop(telemetry)) return;
+        vuMark = vuforia.getVuMark();
 
         if (stage == stages.length) return;
 
@@ -114,11 +99,15 @@ public abstract class IMUAutonomous extends OpMode {
         }
     }
 
+    protected final double getTargetAngle(String corner) {
+        return vuMarkAngles.get(corner).get(vuMark);
+    }
+
     protected String getIMUName() {
         return "imu";
     }
 
-    protected BNO055IMU.Parameters getParameters() {
+    private BNO055IMU.Parameters getParameters() {
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
@@ -140,8 +129,32 @@ public abstract class IMUAutonomous extends OpMode {
         boolean run(double heading, ElapsedTime runtime);
     }
 
+    private void setVuMarkAngles() {
+        vuMarkAngles = new HashMap<>();
 
-    static class Vuforia {
+        vuMarkAngles.put("A", new HashMap<RelicRecoveryVuMark, Double>());
+        vuMarkAngles.put("B", new HashMap<RelicRecoveryVuMark, Double>());
+        vuMarkAngles.put("C", new HashMap<RelicRecoveryVuMark, Double>());
+        vuMarkAngles.put("D", new HashMap<RelicRecoveryVuMark, Double>());
+
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, -50d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, -40d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, -30d);
+
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, 10d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, 20d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, 30d);
+
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, -130d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, -140d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, -150d);
+
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, 170d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, 160d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, 150d);
+    }
+
+    private static class Vuforia {
         private boolean foundVuMark = false;
         private RelicRecoveryVuMark myVuMark;
 
@@ -237,7 +250,9 @@ public abstract class IMUAutonomous extends OpMode {
             return false;
         }
 
-
+        public RelicRecoveryVuMark getVuMark() {
+            return myVuMark;
+        }
     }
 
 }

@@ -58,19 +58,17 @@ public class JewelHitter {
             if (!seen) timer.reset(); // This will run for the last time when we see the ball.
 
             double push;
-            if (foundColor.equals(JewelHitter.Color.Unknown)) {
+            if (foundColor.equals(JewelHitter.Color.Unknown)) { // Determine how much/whether or not to push.
                 push = defaultMiddle;
             } else if (foundColor.equals(friendlyColor)) {
                 seen = true;
                 push = defaultMiddle - pushDistance;
-
             } else {
                 push = defaultMiddle + pushDistance;
                 seen = true;
-
             }
 
-            if (timer.seconds() > 1.5) {
+            if (timer.seconds() > 1.5) { //Wait to make sure that the arm is all the way down.
                 robot.lrServo.setPosition(push);
                 timer.reset();
                 pushed = true;
@@ -122,6 +120,20 @@ public class JewelHitter {
             return Color.Unknown;
         }
 
+    }
+
+    public static IMUAutonomous.Stage getStage(final Robot robot, final Color friendlyColor) {
+        return new IMUAutonomous.Stage() {
+
+            JewelHitter jewelHitter;
+
+            @Override public void setup(double heading, ElapsedTime runtime) {
+                jewelHitter = new JewelHitter(robot, friendlyColor);
+                jewelHitter.start();
+            }
+
+            @Override public boolean run(double heading, ElapsedTime runtime) { return jewelHitter.run(); }
+        };
     }
 
 }
