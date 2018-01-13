@@ -33,8 +33,8 @@ public class Autonomous_B extends IMUAutonomous {
             @Override
             public boolean run(double heading, ElapsedTime runtime) {
                 if (runtime.seconds() < 4) {
-                    robot.leftMotors.setPower(0.2);
-                    robot.rightMotors.setPower(0.2);
+                    robot.leftMotors.setPower(-0.2);
+                    robot.rightMotors.setPower(-0.2);
                     return false;
                 } else {
                     robot.leftMotors.zero();
@@ -53,7 +53,7 @@ public class Autonomous_B extends IMUAutonomous {
                     }
 
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading > startHeading + 10) {
+                        if (heading > startHeading - 10) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;

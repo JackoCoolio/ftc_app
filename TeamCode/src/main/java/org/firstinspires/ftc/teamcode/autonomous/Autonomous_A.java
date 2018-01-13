@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 /**
  * Created by ebenseshe53 on 1/11/2018.
  */
-@Autonomous (name = "Autonomous D")
-public class Autonomous_D extends IMUAutonomous
+@Autonomous (name = "Autonomous A")
+public class Autonomous_A extends IMUAutonomous
 {
     Robot robot;
 
