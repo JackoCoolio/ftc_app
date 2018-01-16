@@ -3,33 +3,118 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-
-import java.util.HashMap;
+import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 /**
  * Created by jacktwamb52 on 1/12/2018.
  */
 
-@Autonomous(name = "Autonomous D")
+@Autonomous(name = "Blue: Autonomous D", group = "Blue")
 public class Autonomous_D extends IMUAutonomous {
 
-    HashMap<RelicRecoveryVuMark, Double> possibilities;
-    double targetAngle;
+    Robot robot;
 
     @Override
     public Stage[] setStages() {
+        robot = new Robot(hardwareMap);
         return new Stage[] {
-                new Stage() {
-
+                JewelHitter.getStage(robot, JewelHitter.Color.Blue),
+                new Stage() { // Drive off.
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
-                        //targetAngle = possibilities.get(vuMark);
+                        runtime.reset();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        return false;
+                        if (runtime.seconds() < 4) {
+                            robot.leftMotors.setPower(-DRIVE_SPEED);
+                            robot.rightMotors.setPower(-DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() { // Turn towards slot.
+
+                    double startHeading;
+                    final double target = getTargetAngle("D");
+
+                    public void setup(double heading, ElapsedTime runtime) {
+                        startHeading = heading;
+                    }
+
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (heading < startHeading + target) {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
+                            return true;
+                        } else {
+                            robot.leftMotors.setPower(TURN_SPEED);
+                            robot.rightMotors.setPower(-TURN_SPEED);
+                            return false;
+                        }
+                    }
+                },
+                new Stage() { // Drive towards slots.
+
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < 2) {
+                            robot.leftMotors.setPower(DRIVE_SPEED);
+                            robot.rightMotors.setPower(DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() { // Run lifts.
+
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < 4) {
+                            robot.liftMotors.setPower(LIFT_SPEED);
+                            return false;
+                        } else {
+                            robot.liftMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() { // Drive back from slot.
+
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < 1.5) {
+                            robot.leftMotors.setPower(-DRIVE_SPEED);
+                            robot.rightMotors.setPower(-DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
+                            return true;
+                        }
                     }
                 }
         };

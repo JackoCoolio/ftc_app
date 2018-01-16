@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -31,53 +30,70 @@ public abstract class IMUAutonomous extends OpMode {
     Negative is counter-clockwise.
      */
 
-    private int stage = 0;
-    private BNO055IMU imu;
+    // USER CONSTANTS //
+    final double DRIVE_SPEED = .2d;
+    final double TURN_SPEED = .1d;
+    final double LIFT_SPEED = .95d;
 
+    // VUFORIA //
     protected boolean foundVuMark = false;
-    private RelicRecoveryVuMark vuMark;
+    RelicRecoveryVuMark vuMark;
     private Vuforia vuforia;
+    private HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
 
+    // STAGE MANAGEMENT //
+    private int stage = 0;
     private Stage[] stages;
     private boolean runSetup = true;
 
+    // IMU //
+    boolean useIMU = true;
+    private BNO055IMU imu;
+
+    // CONTROL //
     private ElapsedTime runtime;
 
-    private HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
-
     @Override public final void start() {
-        stages = setStages();
         runtime.reset();
-
         vuforia.start();
     }
 
     @Override public final void init() {
 
+        stages = setStages();
+
         vuforia = new Vuforia();
 
         setVuMarkAngles();
 
-        imu = hardwareMap.get(BNO055IMU.class, getIMUName());
-        imu.initialize(getParameters());
+        if (useIMU) {
+            imu = hardwareMap.get(BNO055IMU.class, getIMUName());
+            imu.initialize(getParameters());
+        }
         runtime = new ElapsedTime();
 
         vuforia.init(hardwareMap);
     }
 
     @Override public final void loop() {
-        if (!foundVuMark)
+        if (!foundVuMark) {
             foundVuMark = vuforia.loop(telemetry);
+            return;
+        }
         vuMark = vuforia.getVuMark();
 
         if (stage == stages.length) return;
 
         boolean cont;
 
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = null;
+        if (useIMU) angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double heading = 0d;
+        if (useIMU) heading = angles.firstAngle;
 
         try {
-            if (runSetup) stages[stage].setup(angles.firstAngle, runtime);
+            if (runSetup) stages[stage].setup(heading, runtime);
         } catch (Exception e) {
             telemetry.addData("ERROR","An exception occured in setup()");
 
@@ -85,7 +101,7 @@ public abstract class IMUAutonomous extends OpMode {
         }
 
         try {
-            cont = stages[stage].run(angles.firstAngle, runtime);
+            cont = stages[stage].run(heading, runtime);
         } catch (Exception e) {
 
             cont = false;
@@ -101,11 +117,13 @@ public abstract class IMUAutonomous extends OpMode {
         }
     }
 
-    protected final double getTargetAngle(String corner) {
+    final void enableIMU(boolean b) {useIMU=b;}
+
+    final double getTargetAngle(String corner) {
         return vuMarkAngles.get(corner).get(vuMark);
     }
 
-    protected String getIMUName() {
+    String getIMUName() {
         return "imu";
     }
 
@@ -162,8 +180,6 @@ public abstract class IMUAutonomous extends OpMode {
 
         // VUFORIA //
         public static final String TAG = "Vuforia VuMark Sample";
-
-        OpenGLMatrix lastLocation = null;
 
         /**
          * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
