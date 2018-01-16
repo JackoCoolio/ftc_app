@@ -66,8 +66,8 @@ public abstract class IMUAutonomous extends OpMode {
     }
 
     @Override public final void loop() {
-
-        if (!vuforia.loop(telemetry)) return;
+        if (!foundVuMark)
+            foundVuMark = vuforia.loop(telemetry);
         vuMark = vuforia.getVuMark();
 
         if (stage == stages.length) return;
