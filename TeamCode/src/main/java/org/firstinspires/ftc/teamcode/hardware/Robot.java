@@ -30,7 +30,7 @@ public class Robot {
         -left_right
       Sensors:
         -color
-        -gyro?
+        -imu
     */
 
     public MotorGroup leftMotors, rightMotors, liftMotors;
@@ -56,7 +56,7 @@ public class Robot {
         rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right");
         (liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftMotors.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotors.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.REVERSE);
 
         lrServo = hardwareMap.servo.get("left_right");

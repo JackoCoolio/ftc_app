@@ -30,13 +30,8 @@ public abstract class IMUAutonomous extends OpMode {
     Negative is counter-clockwise.
      */
 
-    // USER CONSTANTS //
-    final double DRIVE_SPEED = .2d;
-    final double TURN_SPEED = .1d;
-    final double LIFT_SPEED = .95d;
-
     // VUFORIA //
-    protected boolean foundVuMark = false;
+    private boolean foundVuMark = false;
     RelicRecoveryVuMark vuMark;
     private Vuforia vuforia;
     private HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
@@ -47,7 +42,7 @@ public abstract class IMUAutonomous extends OpMode {
     private boolean runSetup = true;
 
     // IMU //
-    boolean useIMU = true;
+    private boolean useIMU = true;
     private BNO055IMU imu;
 
     // CONTROL //
@@ -60,11 +55,11 @@ public abstract class IMUAutonomous extends OpMode {
 
     @Override public final void init() {
 
+        setVuMarkAngles();
+
         stages = setStages();
 
         vuforia = new Vuforia();
-
-        setVuMarkAngles();
 
         if (useIMU) {
             imu = hardwareMap.get(BNO055IMU.class, getIMUName());
@@ -120,7 +115,8 @@ public abstract class IMUAutonomous extends OpMode {
     final void enableIMU(boolean b) {useIMU=b;}
 
     final double getTargetAngle(String corner) {
-        return vuMarkAngles.get(corner).get(vuMark);
+        return 0d;
+        //return vuMarkAngles.get(corner).get(vuMark);
     }
 
     String getIMUName() {
