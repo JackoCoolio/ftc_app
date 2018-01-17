@@ -5,11 +5,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
-/**
- * Created by ebenseshe53 on 1/11/2018.
- */
 @Autonomous (name = "Blue: Autonomous B", group = "Blue")
 public class Autonomous_B extends IMUAutonomous {
+
     Robot robot;
 
     @Override
@@ -24,7 +22,7 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
                     @Override public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 4) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
                             robot.leftMotors.setPower(DRIVE_SPEED);
                             robot.rightMotors.setPower(DRIVE_SPEED);
                             return false;
@@ -65,7 +63,7 @@ public class Autonomous_B extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 2) {
+                        if (runtime.seconds() < AutonomousConstants.TOWARDS_SLOT_TIME_B) {
                             robot.leftMotors.setPower(DRIVE_SPEED);
                             robot.rightMotors.setPower(DRIVE_SPEED);
                             return false;
@@ -85,7 +83,7 @@ public class Autonomous_B extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 4) {
+                        if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
                             robot.liftMotors.setPower(LIFT_SPEED);
                             return false;
                         } else {
@@ -103,7 +101,7 @@ public class Autonomous_B extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 1.5) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_BACK_TIME) {
                             robot.leftMotors.setPower(-DRIVE_SPEED);
                             robot.rightMotors.setPower(-DRIVE_SPEED);
                             return false;

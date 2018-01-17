@@ -22,7 +22,7 @@ public class Autonomous_A extends IMUAutonomous
                     @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
                     @Override public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 4) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
                             robot.leftMotors.setPower(DRIVE_SPEED);
                             robot.rightMotors.setPower(DRIVE_SPEED);
                             return false;
@@ -61,7 +61,7 @@ public class Autonomous_A extends IMUAutonomous
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 2) {
+                        if (runtime.seconds() < AutonomousConstants.TOWARDS_SLOT_TIME_A) {
                             robot.leftMotors.setPower(DRIVE_SPEED);
                             robot.rightMotors.setPower(DRIVE_SPEED);
                             return false;
@@ -81,7 +81,7 @@ public class Autonomous_A extends IMUAutonomous
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 4) {
+                        if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
                             robot.liftMotors.setPower(LIFT_SPEED);
                             return false;
                         } else {
@@ -99,7 +99,7 @@ public class Autonomous_A extends IMUAutonomous
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 1.5) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_BACK_TIME) {
                             robot.leftMotors.setPower(-DRIVE_SPEED);
                             robot.rightMotors.setPower(-DRIVE_SPEED);
                             return false;
