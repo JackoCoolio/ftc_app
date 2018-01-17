@@ -26,8 +26,8 @@ public class Autonomous_D extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
-                            robot.leftMotors.setPower(-DRIVE_SPEED);
-                            robot.rightMotors.setPower(-DRIVE_SPEED);
+                            robot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
+                            robot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
                             robot.leftMotors.zero();
@@ -51,8 +51,8 @@ public class Autonomous_D extends IMUAutonomous {
                             robot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(TURN_SPEED);
-                            robot.rightMotors.setPower(-TURN_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.TURN_SPEED);
+                            robot.rightMotors.setPower(-AutonomousConstants.TURN_SPEED);
                             return false;
                         }
                     }
@@ -67,8 +67,8 @@ public class Autonomous_D extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.TOWARDS_SLOT_TIME_D) {
-                            robot.leftMotors.setPower(DRIVE_SPEED);
-                            robot.rightMotors.setPower(DRIVE_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
                             robot.leftMotors.zero();
@@ -87,7 +87,7 @@ public class Autonomous_D extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
-                            robot.liftMotors.setPower(LIFT_SPEED);
+                            robot.liftMotors.setPower(AutonomousConstants.LIFT_SPEED);
                             return false;
                         } else {
                             robot.liftMotors.zero();
@@ -105,8 +105,8 @@ public class Autonomous_D extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.DRIVE_BACK_TIME) {
-                            robot.leftMotors.setPower(-DRIVE_SPEED);
-                            robot.rightMotors.setPower(-DRIVE_SPEED);
+                            robot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
+                            robot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
                             robot.leftMotors.zero();
