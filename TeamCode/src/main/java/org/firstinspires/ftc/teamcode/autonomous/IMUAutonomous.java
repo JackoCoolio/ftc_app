@@ -34,7 +34,7 @@ public abstract class IMUAutonomous extends OpMode {
     private boolean foundVuMark = false;
     RelicRecoveryVuMark vuMark;
     private Vuforia vuforia;
-    private HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
+    public HashMap<String, HashMap<RelicRecoveryVuMark, Double>> vuMarkAngles;
 
     // STAGE MANAGEMENT //
     private int stage = 0;
@@ -115,8 +115,13 @@ public abstract class IMUAutonomous extends OpMode {
     final void enableIMU(boolean b) {useIMU=b;}
 
     final double getTargetAngle(String corner) {
+//        telemetry.addData("abc","Made it to getTargetAngle(" + corner + ")");
+//        HashMap<RelicRecoveryVuMark,Double> angles = vuMarkAngles.get(corner);
+//        telemetry.addData("abc","Got angles from vuMarkAngles");
+//        Double angle = angles.get(vuMark);
+//        telemetry.addData("abc","Got the angle. Returning...");
+//        return angle;
         return 0d;
-        //return vuMarkAngles.get(corner).get(vuMark);
     }
 
     String getIMUName() {

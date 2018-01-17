@@ -36,12 +36,17 @@ public class Autonomous_A extends IMUAutonomous
                 new Stage() { // Turn towards correct slot.
 
                     double startHeading;
-                    final double target = getTargetAngle("A");
+                    //final double target = getTargetAngle("A");
+                    double target;
 
-                    public void setup(double heading, ElapsedTime runtime) { startHeading = heading; }
+                    public void setup(double heading, ElapsedTime runtime) {
+                        target = vuMarkAngles.get("A").get(vuMark);
+
+                        startHeading = heading;
+                    }
 
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading > startHeading + target) {
+                        if (heading < startHeading + target) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;

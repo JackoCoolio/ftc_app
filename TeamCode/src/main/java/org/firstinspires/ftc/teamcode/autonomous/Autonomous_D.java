@@ -46,7 +46,7 @@ public class Autonomous_D extends IMUAutonomous {
                     }
 
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading < startHeading + target) {
+                        if (heading > startHeading + target) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;
