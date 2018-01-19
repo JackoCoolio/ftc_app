@@ -16,7 +16,7 @@ public class Autonomous_D extends IMUAutonomous {
         robot = new Robot(hardwareMap);
 
         return new Stage[] {
-                JewelHitter.getStage(robot, JewelHitter.Color.Blue),
+                JewelHitter.getStage(robot, JewelHitter.Color.Blue, telemetry),
                 new Stage() { // Drive off.
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {

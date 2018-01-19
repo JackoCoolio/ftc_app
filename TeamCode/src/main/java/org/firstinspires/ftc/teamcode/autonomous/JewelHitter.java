@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 public class JewelHitter {
@@ -23,6 +24,7 @@ public class JewelHitter {
     private final double upPosition = 0.1;
 
     private boolean pushed = false;
+    double push;
     private ElapsedTime timer = new ElapsedTime();
 
     private boolean seen = false;
@@ -39,44 +41,46 @@ public class JewelHitter {
         robot.udServo.setPosition(downPosition);
     }
 
-    public boolean run() {
+    public boolean run(Telemetry telemetry) {
         // Lower vertical servo.
         robot.udServo.setPosition(lerp(robot.udServo.getPosition(), downPosition, servoSpeed));
 
         // Useful debug information.
-//        telemetry.addData("Pushed",String.valueOf(pushed));
-//        telemetry.addData("Red",robot.colorSensor.red());
-//        telemetry.addData("Green",robot.colorSensor.green());
-//        telemetry.addData("Blue",robot.colorSensor.blue());
+        telemetry.addData("Seen",String.valueOf(seen));
+        telemetry.addData("Pushed",String.valueOf(pushed));
+        telemetry.addData("Red",robot.colorSensor.red());
+        telemetry.addData("Green",robot.colorSensor.green());
+        telemetry.addData("Blue",robot.colorSensor.blue());
 
 
 
-        if (!pushed) {
+        if (!seen) {
             Color foundColor = determineColor(robot.colorSensor);
 //            telemetry.addData("Color", foundColor.toString());
 
-            if (!seen) timer.reset(); // This will run for the last time when we see the ball.
+            timer.reset(); // This will run for the last time when we see the ball.
 
-            double push;
+
             if (foundColor.equals(JewelHitter.Color.Unknown)) { // Determine how much/whether or not to push.
                 push = defaultMiddle;
             } else if (foundColor.equals(friendlyColor)) {
                 seen = true;
-                push = defaultMiddle - pushDistance;
-            } else {
                 push = defaultMiddle + pushDistance;
+            } else {
+                push = defaultMiddle - pushDistance;
                 seen = true;
             }
 
-            if (timer.seconds() > 1.5) { //Wait to make sure that the arm is all the way down.
-                robot.lrServo.setPosition(push);
-                timer.reset();
-                pushed = true;
-            }
+
 
             return false;
 
         } else {
+            if (timer.seconds() > 1.5) { //Wait to make sure that the arm is all the way down.
+                robot.lrServo.setPosition(push);
+                pushed = true;
+            }
+
             if (timer.seconds() > 2.25)
                 robot.udServo.setPosition(lerp(robot.udServo.getPosition(), upPosition, servoSpeed * 3));
 
@@ -122,7 +126,7 @@ public class JewelHitter {
 
     }
 
-    public static IMUAutonomous.Stage getStage(final Robot robot, final Color friendlyColor) {
+    public static IMUAutonomous.Stage getStage(final Robot robot, final Color friendlyColor, final Telemetry telemetry) {
         return new IMUAutonomous.Stage() {
 
             JewelHitter jewelHitter;
@@ -132,7 +136,7 @@ public class JewelHitter {
                 jewelHitter.start();
             }
 
-            @Override public boolean run(double heading, ElapsedTime runtime) { return jewelHitter.run(); }
+            @Override public boolean run(double heading, ElapsedTime runtime) { return jewelHitter.run(telemetry); }
         };
     }
 
