@@ -46,7 +46,11 @@ public class Autonomous_A extends IMUAutonomous
                     }
 
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading < startHeading + target) {
+                        telemetry.addData("Start heading",startHeading);
+                        telemetry.addData("Heading",heading);
+                        telemetry.addData("Target angle",startHeading + target);
+                        telemetry.addData("Target offset",target);
+                        if (heading > startHeading + target) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;

@@ -55,6 +55,8 @@ public abstract class IMUAutonomous extends OpMode {
 
     @Override public final void init() {
 
+        msStuckDetectInit = 10000;
+
         setVuMarkAngles();
 
         stages = setStages();
@@ -150,7 +152,7 @@ public abstract class IMUAutonomous extends OpMode {
         boolean run(double heading, ElapsedTime runtime);
     }
 
-    private void setVuMarkAngles() {
+    private void setVuMarkAngles() { // - is clockwise
         vuMarkAngles = new HashMap<>();
 
         vuMarkAngles.put("A", new HashMap<RelicRecoveryVuMark, Double>());
@@ -158,21 +160,21 @@ public abstract class IMUAutonomous extends OpMode {
         vuMarkAngles.put("C", new HashMap<RelicRecoveryVuMark, Double>());
         vuMarkAngles.put("D", new HashMap<RelicRecoveryVuMark, Double>());
 
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, -50d);
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, -40d);
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, -30d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, 50d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, 40d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, 30d);
 
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, 10d);
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, 20d);
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, 30d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, -10d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, -20d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, -30d);
 
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, -130d);
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, -140d);
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, -150d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, 130d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, 140d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, 150d);
 
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, 170d);
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, 160d);
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, 150d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, -170d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, -160d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, -150d);
     }
 
     private static class Vuforia {

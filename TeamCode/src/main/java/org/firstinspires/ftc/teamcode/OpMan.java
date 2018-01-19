@@ -18,11 +18,6 @@ public class OpMan extends OpMode {
     private boolean driveSlow;
     // CONTROL BOOLEANS //
 
-    // SENSORS //
-    //private TouchSensor topTouch;
-    //private TouchSensor bottomTouch;
-    // SENSORS //
-
     // CONSTANTS //
 //  private final double liftPowerMult = 0.25d;
     private final double baseLiftSpeed = 0.35d;
@@ -49,12 +44,12 @@ public class OpMan extends OpMode {
         if (gamepad1.right_bumper || gamepad1.left_bumper) // Check if driver is pressing either bumper (slow-mode)
             driveSlow = true;
 
-        leftDrivePower = gamepad1.left_stick_y * baseDriveSpeed; // Calculate left drive speed.
-        rightDrivePower = gamepad1.right_stick_y * baseDriveSpeed; // Calculate right drive speed.
+        leftDrivePower = gamepad1.left_stick_y * baseDriveSpeed * -1; // Calculate left drive speed.
+        rightDrivePower = gamepad1.right_stick_y * baseDriveSpeed * -1; // Calculate right drive speed.
 
         if (gamepad2.left_stick_y != 0 || gamepad2.right_stick_y != 0) { // Separate lift-control sticks allow for individual lift motor tweaking.
-            leftLiftPower = gamepad2.left_stick_y * baseLiftSpeed;
-            rightLiftPower = gamepad2.right_stick_y * baseLiftSpeed;
+            leftLiftPower = gamepad2.left_stick_y * baseLiftSpeed * -1;
+            rightLiftPower = gamepad2.right_stick_y * baseLiftSpeed * -1;
         } else { // If neither lift-control stick is active, allow the Y & A buttons to act as controls.
             double pwr = 0;
 
@@ -69,9 +64,9 @@ public class OpMan extends OpMode {
         }
 
         if (gamepad2.dpad_up) { // D-Pad controls are used for lift.
-            winchPower = 1;
+            winchPower = .95;
         } else if (gamepad2.dpad_down) {
-            winchPower = -1;
+            winchPower = -.95;
         } else {
             winchPower = 0;
         }

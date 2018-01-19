@@ -58,17 +58,15 @@ public class Robot {
         leftMotors.getMotor("front_left").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotors.getMotor("front_right").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        leftMotors.setDirection(DcMotorSimple.Direction.FORWARD);
         rightMotors.setDirection(DcMotorSimple.Direction.REVERSE);
-        liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.FORWARD);
+        liftMotors.getMotor("right_lift").setDirection(DcMotorSimple.Direction.REVERSE);
 
         lrServo = hardwareMap.servo.get("left_right");
         udServo = hardwareMap.servo.get("up_down");
 
         colorSensor = hardwareMap.colorSensor.get("color");
-    }
-
-    public void reload() {
-        init();
     }
 
 }
