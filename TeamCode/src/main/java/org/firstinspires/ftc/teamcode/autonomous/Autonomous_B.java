@@ -39,6 +39,7 @@ public class Autonomous_B extends IMUAutonomous {
                     double target;
 
                     public void setup(double heading, ElapsedTime runtime) {
+                        robot.lift.setPower(0.95);
                         startHeading = heading;
                         target = vuMarkAngles.get("B").get(vuMark);
                     }
@@ -80,15 +81,35 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
+                        robot.lift.zero();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
-                            robot.liftMotors.setPower(AutonomousConstants.LIFT_SPEED);
+                            robot.liftMotors.setPower(-AutonomousConstants.LIFT_SPEED);
                             return false;
                         } else {
                             robot.liftMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < AutonomousConstants.PUSH_TIME) {
+                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
                             return true;
                         }
                     }

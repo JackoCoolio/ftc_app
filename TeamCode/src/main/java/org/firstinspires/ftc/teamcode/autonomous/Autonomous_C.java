@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
-@Autonomous(name = "Blue: Autonomous C", group = "Blue")
+@Autonomous(name = "Red: Autonomous C", group = "Red")
 public class Autonomous_C extends IMUAutonomous {
 
     Robot robot;
@@ -43,13 +43,14 @@ public class Autonomous_C extends IMUAutonomous {
 
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
+                        robot.lift.setPower(0.95);
                         startHeading = heading;
                         target = vuMarkAngles.get("C").get(vuMark);
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading > startHeading + target) {
+                        if (heading < startHeading + target) {
                             robot.leftMotors.setPower(-AutonomousConstants.TURN_SPEED);
                             robot.rightMotors.setPower(AutonomousConstants.TURN_SPEED);
                             return false;
@@ -70,8 +71,8 @@ public class Autonomous_C extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.TOWARDS_SLOT_TIME_C) {
-                            robot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
-                            robot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
                             robot.leftMotors.zero();
@@ -85,15 +86,35 @@ public class Autonomous_C extends IMUAutonomous {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
+                        robot.lift.zero();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
-                            robot.liftMotors.setPower(AutonomousConstants.LIFT_SPEED);
+                            robot.liftMotors.setPower(-AutonomousConstants.LIFT_SPEED);
                             return false;
                         } else {
                             robot.liftMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < AutonomousConstants.PUSH_TIME) {
+                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
                             return true;
                         }
                     }

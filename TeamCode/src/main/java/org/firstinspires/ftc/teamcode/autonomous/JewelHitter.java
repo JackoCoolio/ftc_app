@@ -26,6 +26,7 @@ public class JewelHitter {
     private boolean pushed = false;
     double push;
     private ElapsedTime timer = new ElapsedTime();
+    private ElapsedTime giveUpTimer = new ElapsedTime();
 
     private boolean seen = false;
 
@@ -39,6 +40,7 @@ public class JewelHitter {
     public void start() {
         robot.lrServo.setPosition(defaultMiddle);
         robot.udServo.setPosition(downPosition);
+        giveUpTimer.reset();
     }
 
     public boolean run(Telemetry telemetry) {
@@ -60,9 +62,12 @@ public class JewelHitter {
 
             timer.reset(); // This will run for the last time when we see the ball.
 
-
             if (foundColor.equals(JewelHitter.Color.Unknown)) { // Determine how much/whether or not to push.
                 push = defaultMiddle;
+
+                if (giveUpTimer.seconds() > 5) {
+                    seen = true;
+                }
             } else if (foundColor.equals(friendlyColor)) {
                 seen = true;
                 push = defaultMiddle + pushDistance;
@@ -71,21 +76,19 @@ public class JewelHitter {
                 seen = true;
             }
 
-
-
             return false;
 
         } else {
-            if (timer.seconds() > 1.5) { //Wait to make sure that the arm is all the way down.
+            if (timer.seconds() > 1 && timer.seconds() < 1.25) { //Wait to make sure that the arm is all the way down.
                 robot.lrServo.setPosition(push);
                 pushed = true;
             }
 
-            if (timer.seconds() > 2.25)
+            if (timer.seconds() > 2)
                 robot.udServo.setPosition(lerp(robot.udServo.getPosition(), upPosition, servoSpeed * 3));
 
             if (timer.seconds() > 1.5)
-                robot.lrServo.setPosition(lerp(robot.lrServo.getPosition(), defaultMiddle, servoSpeed / 5));
+                robot.lrServo.setPosition(lerp(robot.lrServo.getPosition(), defaultMiddle, servoSpeed / 3));
 
             if (timer.seconds() > 3 && robot.udServo.getPosition() == upPosition)
                 return true;
@@ -116,9 +119,9 @@ public class JewelHitter {
 
     private Color determineColor(ColorSensor sensor) {
 
-        if (sensor.red() > sensor.green() + sensor.blue()) {
+        if (sensor.red() > sensor.blue()+2) {
             return Color.Red;
-        } else if (sensor.blue() > sensor.green() + sensor.red()) {
+        } else if (sensor.blue() > sensor.red()+2) {
             return Color.Blue;
         } else {
             return Color.Unknown;
