@@ -22,7 +22,7 @@ public class Autonomous_A extends IMUAutonomous
                     @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
                     @Override public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME_AC) {
                             robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;

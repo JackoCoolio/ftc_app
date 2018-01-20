@@ -22,7 +22,7 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
                     @Override public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME_BD) {
                             robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
@@ -36,10 +36,11 @@ public class Autonomous_B extends IMUAutonomous {
                 new Stage() { // Turn towards slot.
 
                     double startHeading;
-                    final double target = getTargetAngle("B");
+                    double target;
 
                     public void setup(double heading, ElapsedTime runtime) {
                         startHeading = heading;
+                        target = vuMarkAngles.get("B").get(vuMark);
                     }
 
                     public boolean run(double heading, ElapsedTime runtime) {

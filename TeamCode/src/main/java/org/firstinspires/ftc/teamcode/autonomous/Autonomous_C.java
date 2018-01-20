@@ -16,7 +16,7 @@ public class Autonomous_C extends IMUAutonomous {
         robot = new Robot(hardwareMap);
 
         return new Stage[] {
-                JewelHitter.getStage(robot, JewelHitter.Color.Blue, telemetry),
+                JewelHitter.getStage(robot, JewelHitter.Color.Red, telemetry),
                 new Stage() { // Drive off.
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
@@ -25,7 +25,7 @@ public class Autonomous_C extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME_AC) {
                             robot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             robot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             return false;
@@ -39,11 +39,12 @@ public class Autonomous_C extends IMUAutonomous {
                 new Stage() { // Turn towards slot.
 
                     double startHeading;
-                    final double target = getTargetAngle("C");
+                    double target;
 
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         startHeading = heading;
+                        target = vuMarkAngles.get("C").get(vuMark);
                     }
 
                     @Override

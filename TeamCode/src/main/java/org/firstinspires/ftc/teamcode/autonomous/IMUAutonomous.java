@@ -160,21 +160,21 @@ public abstract class IMUAutonomous extends OpMode {
         vuMarkAngles.put("C", new HashMap<RelicRecoveryVuMark, Double>());
         vuMarkAngles.put("D", new HashMap<RelicRecoveryVuMark, Double>());
 
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, 60d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, 70d);
         vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, 50d);
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, 40d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, 35d);
 
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, -10d);
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, -20d);
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, -30d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, -68d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, -55d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, -43d);
 
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, -170d);
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, -160d);
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, -150d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, 110d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, 130d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, 145d);
 
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, 120d);
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, 130d);
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, 140d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, -112d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, -125d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, -137d);
     }
 
     private static class Vuforia {

@@ -59,7 +59,7 @@ public class Robot {
         rightMotors.getMotor("front_right").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftMotors.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotors.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotors.setDirection((DcMotorSimple.Direction.REVERSE));
         liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotors.getMotor("right_lift").setDirection(DcMotorSimple.Direction.REVERSE);
 
