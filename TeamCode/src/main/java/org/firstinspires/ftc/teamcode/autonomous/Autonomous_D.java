@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
-@Autonomous(name = "Blue: Autonomous D", group = "Blue")
+@Autonomous(name = "Red: Autonomous D", group = "Red")
 public class Autonomous_D extends IMUAutonomous {
 
     Robot robot;
@@ -16,7 +16,7 @@ public class Autonomous_D extends IMUAutonomous {
         robot = new Robot(hardwareMap);
 
         return new Stage[] {
-                JewelHitter.getStage(robot, JewelHitter.Color.Blue, telemetry),
+                JewelHitter.getStage(robot, JewelHitter.Color.Red, telemetry),
                 new Stage() { // Drive off.
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
@@ -25,7 +25,7 @@ public class Autonomous_D extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME_BD) {
                             robot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             robot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             return false;
@@ -39,14 +39,21 @@ public class Autonomous_D extends IMUAutonomous {
                 new Stage() { // Turn towards slot.
 
                     double startHeading;
-                    final double target = getTargetAngle("D");
+                    double target;
 
                     public void setup(double heading, ElapsedTime runtime) {
+                        robot.lift.setPower(0.95);
                         startHeading = heading;
+                        target = vuMarkAngles.get("D").get(vuMark);
                     }
 
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (heading > startHeading + target) {
+                        telemetry.addData("Heading",heading);
+                        telemetry.addData("Start Heading", startHeading);
+                        telemetry.addData("Target",target + startHeading);
+                        telemetry.addData("Target offset",target);
+                        telemetry.addData("To go...",target + startHeading - heading);
+                        if (heading < startHeading + target) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;
@@ -82,15 +89,35 @@ public class Autonomous_D extends IMUAutonomous {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
+                        robot.lift.zero();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
-                            robot.liftMotors.setPower(AutonomousConstants.LIFT_SPEED);
+                            robot.liftMotors.setPower(-AutonomousConstants.LIFT_SPEED);
                             return false;
                         } else {
                             robot.liftMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < AutonomousConstants.PUSH_TIME) {
+                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
                             return true;
                         }
                     }

@@ -161,20 +161,20 @@ public abstract class IMUAutonomous extends OpMode {
         vuMarkAngles.put("D", new HashMap<RelicRecoveryVuMark, Double>());
 
         vuMarkAngles.get("A").put(RelicRecoveryVuMark.LEFT, 60d);
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, 50d);
-        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, 40d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.CENTER, 35d);
+        vuMarkAngles.get("A").put(RelicRecoveryVuMark.RIGHT, 25d);
 
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, -10d);
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, -20d);
-        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, -30d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.LEFT, -68d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.CENTER, -55d);
+        vuMarkAngles.get("B").put(RelicRecoveryVuMark.RIGHT, -43d);
 
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, -170d);
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, -160d);
-        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, -150d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.LEFT, 110d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.CENTER, 130d);
+        vuMarkAngles.get("C").put(RelicRecoveryVuMark.RIGHT, 145d);
 
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, 120d);
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, 130d);
-        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, 140d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.LEFT, -112d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.CENTER, -125d);
+        vuMarkAngles.get("D").put(RelicRecoveryVuMark.RIGHT, -137d);
     }
 
     private static class Vuforia {
@@ -193,7 +193,11 @@ public abstract class IMUAutonomous extends OpMode {
         VuforiaTrackables relicTrackables;
         VuforiaTrackable relicTemplate;
 
+        ElapsedTime timer;
+
         public void init(HardwareMap hardwareMap) {
+            timer = new ElapsedTime();
+
             /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
@@ -239,6 +243,7 @@ public abstract class IMUAutonomous extends OpMode {
 
         public void start() {
             relicTrackables.activate();
+            timer.reset();
         }
 
         public boolean loop(Telemetry telemetry) {
@@ -264,8 +269,12 @@ public abstract class IMUAutonomous extends OpMode {
                     return true;
                 } else {
                     telemetry.addData("VuMark", "not visible");
-                    return false;
                 }
+            }
+
+            if (timer.seconds() > 5) { // If Vuforia hasn't found the target in 5 seconds, give up.
+                myVuMark = RelicRecoveryVuMark.CENTER; // Just say that we found the center one (leaves room for error)
+                return true;
             }
 
             return false;

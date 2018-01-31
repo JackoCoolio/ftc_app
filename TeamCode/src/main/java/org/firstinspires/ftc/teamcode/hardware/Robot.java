@@ -33,8 +33,7 @@ public class Robot {
         -imu
     */
 
-    public MotorGroup leftMotors, rightMotors, liftMotors;
-    public DcMotor lift;
+    public MotorGroup leftMotors, rightMotors, liftMotors, lift;
 
     public Servo lrServo, udServo;
 
@@ -50,8 +49,8 @@ public class Robot {
     }
 
     private void init() {
-        lift = hardwareMap.dcMotor.get("lift");
-
+        lift = new MotorGroup(hardwareMap,"lift");
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left");
         rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right");
         (liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -59,7 +58,7 @@ public class Robot {
         rightMotors.getMotor("front_right").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftMotors.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotors.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotors.setDirection((DcMotorSimple.Direction.REVERSE));
         liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotors.getMotor("right_lift").setDirection(DcMotorSimple.Direction.REVERSE);
 

@@ -22,7 +22,7 @@ public class Autonomous_A extends IMUAutonomous
                     @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
                     @Override public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME) {
+                        if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME_AC) {
                             robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
@@ -40,6 +40,8 @@ public class Autonomous_A extends IMUAutonomous
                     double target;
 
                     public void setup(double heading, ElapsedTime runtime) {
+                        robot.lift.setPower(0.95);
+
                         target = vuMarkAngles.get("A").get(vuMark);
 
                         startHeading = heading;
@@ -86,15 +88,35 @@ public class Autonomous_A extends IMUAutonomous
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
+                        robot.lift.zero();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
-                            robot.liftMotors.setPower(AutonomousConstants.LIFT_SPEED);
+                            robot.liftMotors.setPower(-AutonomousConstants.LIFT_SPEED);
                             return false;
                         } else {
                             robot.liftMotors.zero();
+                            return true;
+                        }
+                    }
+                },
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < AutonomousConstants.PUSH_TIME) {
+                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            return false;
+                        } else {
+                            robot.leftMotors.zero();
+                            robot.rightMotors.zero();
                             return true;
                         }
                     }
