@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 @TeleOp(name = "DriveByDistance")
 public class DriveByDistance extends OpMode {
 
-    static final double PI = 3.1415;
     static final double COUNTS_PER_REV = 560;
-    static final double DRIVE_GEAR_REDUCTION = 40.0; // ?
+    static final double DRIVE_GEAR_REDUCTION = 40d; // ?
     static final double WHEEL_DIAMETER_INCHES = 3.75;
 
     Robot robot;
@@ -45,8 +44,12 @@ public class DriveByDistance extends OpMode {
         if (!driven) {
             robot.leftMotors.encoderDrive(0.5, 12, 10, "front_left", telemetry);
             driven = robot.rightMotors.encoderDrive(0.5, 12, 10, "front_right", telemetry);
+
+            telemetry.addData("front left motor", robot.leftMotors.getMotor("front_left").getPower());
         } else {
             driven = false;
         }
+
+        telemetry.addData("Driving with encoder",robot.leftMotors.drivingByEncoder + " " + robot.rightMotors.drivingByEncoder);
     }
 }

@@ -16,7 +16,7 @@ public class MotorGroup {
     private HashMap<String, DcMotor> motors;
     private HashMap<String, EncoderParameters> motorParams;
     private ElapsedTime timer;
-    private boolean drivingByEncoder = false;
+    public boolean drivingByEncoder = false;
     private DcMotor trackMotor;
     int newTarget;
 
@@ -112,7 +112,7 @@ public class MotorGroup {
             newTarget = trackMotor.getCurrentPosition() + (int)(inches * motorParams.get(trackMotorName).COUNTS_PER_INCH);
 
             for (String motor : motors.keySet()) {
-                telemetry.addData("EncoderDrive","Setting target position for" + motor);
+                telemetry.addData("EncoderDrive","Setting target position for " + motor);
                 motors.get(motor).setTargetPosition(motors.get(motor).getCurrentPosition() + (int)(inches * motorParams.get(motor).COUNTS_PER_INCH));
             }
 
@@ -126,7 +126,9 @@ public class MotorGroup {
         if (timer.seconds() < timeoutS && isBusy()) {
             if (telemetry != null) {
                 telemetry.addData("Path1",  "Running to %7d", newTarget);
-                telemetry.addData("Path2",  "Running at %7d", trackMotor.getCurrentPosition());
+                for (String name : motors.keySet()) {
+                    telemetry.addData(name,motors.get(name).getCurrentPosition());
+                }
             }
             return false;
         } else {
