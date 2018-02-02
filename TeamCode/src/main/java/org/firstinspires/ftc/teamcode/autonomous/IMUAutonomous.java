@@ -43,6 +43,8 @@ public abstract class IMUAutonomous extends OpMode {
     private boolean runSetup = true;
 
     // IMU //
+    private double offset = 0;
+    private double heading;
     private boolean useIMU = true;
     private BNO055IMU imu;
 
@@ -55,6 +57,8 @@ public abstract class IMUAutonomous extends OpMode {
     }
 
     @Override public final void init() {
+
+        telemetry.setAutoClear(false);
 
         msStuckDetectInit = 10000;
 
@@ -87,15 +91,18 @@ public abstract class IMUAutonomous extends OpMode {
         Orientation angles = null;
         if (useIMU) angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        double heading = 0d;
-        if (useIMU) heading = angles.firstAngle;
+        heading = 0d;
+        if (useIMU) heading = angles.firstAngle - offset;
 
-        try {
-            if (runSetup) stages[stage].setup(heading, runtime);
-        } catch (Exception e) {
-            telemetry.addData("ERROR","An exception occured in setup()");
+        if (runSetup) {
 
-            e.printStackTrace();
+            try {
+                stages[stage].setup(heading, runtime);
+            } catch (Exception e) {
+                telemetry.addData("ERROR", "An exception occured in setup()");
+
+                e.printStackTrace();
+            }
         }
 
         try {
@@ -110,6 +117,7 @@ public abstract class IMUAutonomous extends OpMode {
 
         runSetup = false;
         if (cont) {
+            offset = heading;
             stage++;
             runSetup = true;
         }
@@ -149,10 +157,23 @@ public abstract class IMUAutonomous extends OpMode {
 
     public abstract Stage[] setStages();
 
-    public interface Stage {
-        void setup(double heading, ElapsedTime runtime);
-        boolean run(double heading, ElapsedTime runtime);
+    public static abstract class Stage {
+        public void setup(double heading, ElapsedTime runtime) {}
+        abstract public boolean run(double heading, ElapsedTime runtime);
     }
+
+    public static void imuDebug(Telemetry telemetry, double startHeading, double heading, double targetPos) {
+        telemetry.addData("IMU","--DEBUG--");
+        telemetry.addData("   Heading",heading);
+        telemetry.addData("   Start Heading",startHeading);
+        telemetry.addData("   Target Pos",targetPos);
+        telemetry.addData("   To go",(targetPos+startHeading)-heading);
+    }
+
+//    public interface Stage {
+//        void setup(double heading, ElapsedTime runtime);
+//        boolean run(double heading, ElapsedTime runtime);
+//    }
 
     private void setVuMarkAngles() { // - is clockwise
         vuMarkAngles = new HashMap<>();

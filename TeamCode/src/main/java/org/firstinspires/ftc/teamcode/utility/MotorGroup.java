@@ -18,8 +18,9 @@ public class MotorGroup {
     private ElapsedTime timer;
     public boolean drivingByEncoder = false;
     private HashMap<DcMotor, Integer> targetPositions;
-    private DcMotor trackMotor;
     int newTarget;
+
+    int encoderDriveCount = 0;
 
     public MotorGroup(HardwareMap _hm, String... _names) {
         motors = new HashMap<>();
@@ -62,6 +63,7 @@ public class MotorGroup {
             m.setPower(0d);
         }
     }
+    public static void zero(MotorGroup... groups) {for (MotorGroup group : groups) group.zero();}
 
     public DcMotor getMotor(String _name) {
         return motors.get(_name);
@@ -110,6 +112,20 @@ public class MotorGroup {
         zero();
     }
 
+    public boolean encodersCalibrated(Telemetry telemetry) {
+        int count = 0;
+        for (DcMotor motor : motors.values())
+            count += motor.getCurrentPosition();
+        if (count == 0) {
+            telemetry.addData("Encoder Status","Encoders calibrated.");
+            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            return true;
+        } else {
+            telemetry.addData("Encoder Status","Waiting for encoders to reset.");
+            return false;
+        }
+    }
+
 //    public boolean encoderDrive(double speed, double inches, double minimumDriveTime, double timeoutS, String trackMotorName, Telemetry telemetry)
 //    {
 //        if (motorParams.size() != motors.size()) {
@@ -156,27 +172,27 @@ public class MotorGroup {
 
     public boolean encoderDriveTest(double speed, double inches, double timeoutS, Telemetry telemetry)
     {
-        telemetry.clear();
-        telemetry.addData("EncoderDrive","Speed: " + speed + ", Inches: " + inches);
+        telemetry.addData("EncoderDrive #" + encoderDriveCount, "Speed: " + speed + ", Inches: " + inches);
         if (motorParams.size() != motors.size()) {
-            telemetry.addData("EncoderDrive","ERROR - EncoderParameters not set!");
+            telemetry.addData("EncoderDrive #" + encoderDriveCount,"ERROR - EncoderParameters not set!");
             return false;
         }
         if (!drivingByEncoder) { // First section run
-            telemetry.addData("EncoderDrive","Starting encoderDrive()");
-            drivingByEncoder = true;
 
-            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            telemetry.addData("EncoderDrive #" + encoderDriveCount,"Starting encoderDrive()");
+            drivingByEncoder = true;
 
             targetPositions = new HashMap<>();
             for (String motor : motors.keySet()) {
-                telemetry.addData("EncoderDrive","Setting target position for " + motor);
+                telemetry.addData("EncoderDrive #" + encoderDriveCount,"Setting target position for " + motor + " with current position of: " + motors.get(motor).getCurrentPosition());
                 targetPositions.put(motors.get(motor), motors.get(motor).getCurrentPosition() + (int)(inches * motorParams.get(motor).COUNTS_PER_INCH));
             }
 
-            telemetry.addData("EncoderDrive", "Reset timer!");
+            telemetry.addData("EncoderDrive #" + encoderDriveCount, "Reset timer!");
             timer.reset();
+        }
+
+        if (timer.seconds() > 2) {
             if (inches > 0)
                 setPower(Math.abs(speed));
             else
@@ -196,29 +212,41 @@ public class MotorGroup {
             }
         }
 
-        for (String motorName : motors.keySet()) { // Telemetry
-            DcMotor motor = motors.get(motorName);
-            int motorPos = motor.getCurrentPosition();
-            int targetPos = targetPositions.get(motor);
-            telemetry.addData(motorName, "(" + motorPos + " / " + targetPos + ") " + (motorPos/targetPos*100) + " percent complete.");
-        }
-
         if (finishedCount == motors.size() || timer.seconds() > timeoutS) {
-            if (timer.seconds() > timeoutS) telemetry.addData("EncoderDrive","Timed out!");
-            else telemetry.addData("EncoderDrive","Motors finished driving!");
+            if (timer.seconds() > timeoutS) telemetry.addData("EncoderDrive #" + encoderDriveCount,"Timed out!");
+            else telemetry.addData("EncoderDrive #" + encoderDriveCount,"Motors finished driving!");
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            encoderDriveCount++;
             drivingByEncoder = false;
         } else {
-            telemetry.addData("Path1",  "Running to %7d", newTarget);
             for (String name : motors.keySet()) {
                 telemetry.addData(name,motors.get(name).getCurrentPosition());
             }
         }
 
+        for (String motorName : motors.keySet()) { // Telemetry
+            DcMotor motor = motors.get(motorName);
+            int motorPos = motor.getCurrentPosition();
+            int targetPos = targetPositions.get(motor);
+            telemetry.addData(("EncoderDrive #" + encoderDriveCount) + ": " + motorName, "(" + motorPos + " / " + targetPos + ") " + (motorPos/targetPos*100) + " percent complete.");
+        }
+
         return !drivingByEncoder;
     }
 
+    public enum TurnDirection {Left,Right};
+    public static void turn(double turnSpeed, TurnDirection dir, MotorGroup left, MotorGroup right) {
+        if (dir.equals(TurnDirection.Left)) {
+            left.setPower(-turnSpeed);
+            right.setPower(turnSpeed);
+        } else if (dir.equals(TurnDirection.Right)) {
+            left.setPower(turnSpeed);
+            right.setPower(-turnSpeed);
+        }
+    }
+
     public static boolean runAndStopIfFinished(double speed, double inches, double timeoutS, Telemetry telemetry, MotorGroup... groups) {
+
         boolean allFinished = false;
         for (MotorGroup group : groups) {
             boolean finished = group.encoderDriveTest(speed, inches, timeoutS, telemetry);
@@ -234,14 +262,101 @@ public class MotorGroup {
     public static class EncoderParameters {
 
         final double COUNTS_PER_INCH;
+        double COUNTS_PER_REV;
+        double DRIVE_GEAR_REDUCTION;
+        double WHEEL_DIAMETER_INCHES;
 
         public EncoderParameters(double countsPerRev, double driveGearReduction, double wheelDiameterInches) {
+            COUNTS_PER_REV = countsPerRev;
+            DRIVE_GEAR_REDUCTION = driveGearReduction;
+            WHEEL_DIAMETER_INCHES = wheelDiameterInches;
             COUNTS_PER_INCH = (countsPerRev * driveGearReduction) / (wheelDiameterInches * 3.1415);
         }
 
         public EncoderParameters(double countsPerInch) {
             COUNTS_PER_INCH = countsPerInch;
         }
+    }
+
+    public static class DistanceDriver {
+
+        EncoderParameters params;
+        MotorGroup leftGroup;
+        MotorGroup rightGroup;
+
+        DcMotor trackMotorL, trackMotorR;
+
+        ElapsedTime timer;
+
+        double speed, inches, timeout, rampup;
+
+        int newLeftTarget;
+        int newRightTarget;
+
+        public DistanceDriver(double speed, double inches, double timeout, double rampup, EncoderParameters params, MotorGroup leftGroup, String trackMotorL, MotorGroup rightGroup, String trackMotorR) {
+            if (inches > 0)
+                this.speed = Math.abs(speed);
+            else
+                this.speed = -Math.abs(speed);
+            this.inches = inches;
+            this.timeout = timeout;
+            this.rampup = rampup;
+            this.params = params;
+            this.timer = new ElapsedTime();
+            this.trackMotorL = leftGroup.getMotor(trackMotorL);
+            this.trackMotorR = rightGroup.getMotor(trackMotorR);
+
+            init();
+        }
+
+        private int getAveragePosition(MotorGroup group) {
+            int sum = 0;
+            for (DcMotor motor : group.motors.values())
+                sum += motor.getCurrentPosition();
+            sum /= group.motors.size();
+            return sum;
+        }
+
+        private void init() {
+            timer.reset();
+
+            int leftSum = getAveragePosition(leftGroup);
+            int rightSum = getAveragePosition(rightGroup);
+
+            newLeftTarget = leftSum * (int)(inches * params.COUNTS_PER_INCH);
+            newRightTarget = rightSum * (int)(inches * params.COUNTS_PER_INCH);
+
+
+        }
+
+        public boolean drive() {
+            if ((timer.seconds() < timeout) && (Math.abs(getAveragePosition(leftGroup)) < newLeftTarget) && (Math.abs(getAveragePosition(rightGroup)) < newRightTarget)) {
+                double rem = (getAveragePosition(leftGroup) + getAveragePosition(rightGroup)) / 2;
+                double NLSpeed, NRSpeed;
+                if (timer.seconds() < rampup) {
+                    double ramp = timer.seconds() / rampup;
+                    NLSpeed = speed * ramp;
+                    NRSpeed = speed * ramp;
+                } else if (rem > params.COUNTS_PER_REV * 2) {
+                    NLSpeed = speed;
+                    NRSpeed = speed;
+                } else if (rem > params.COUNTS_PER_REV / 2 && speed*.2 > .1) {
+                    NLSpeed = speed * (rem / (params.COUNTS_PER_REV*2));
+                    NRSpeed = speed * (rem / (params.COUNTS_PER_REV*2));
+                } else {
+                    NLSpeed = speed * .2;
+                    NRSpeed = speed * .2;
+                }
+
+                leftGroup.setPower(NLSpeed);
+                rightGroup.setPower(NRSpeed);
+            } else {
+                leftGroup.zero();
+                rightGroup.zero();
+            }
+            return false;
+        }
+
     }
 
 }
