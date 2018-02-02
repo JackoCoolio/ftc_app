@@ -33,6 +33,10 @@ public class Robot {
         -imu
     */
 
+    static final double COUNTS_PER_REV = 560;
+    static final double DRIVE_GEAR_REDUCTION = 2; // ?
+    static final double WHEEL_DIAMETER_INCHES = 3.75;
+
     public MotorGroup leftMotors, rightMotors, liftMotors, lift;
 
     public Servo lrServo, udServo;
@@ -54,11 +58,20 @@ public class Robot {
         leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left");
         rightMotors = new MotorGroup(hardwareMap, "front_right", "rear_right");
         (liftMotors = new MotorGroup(hardwareMap, "left_lift", "right_lift")).setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftMotors.getMotor("front_left").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotors.getMotor("front_right").setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftMotors.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotors.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftMotors.setDirection(DcMotorSimple.Direction.FORWARD);
         rightMotors.setDirection((DcMotorSimple.Direction.REVERSE));
+
+        MotorGroup.EncoderParameters params = new MotorGroup.EncoderParameters(
+                COUNTS_PER_REV,
+                DRIVE_GEAR_REDUCTION,
+                WHEEL_DIAMETER_INCHES
+        );
+        leftMotors.setEncoderParameters(params);
+        rightMotors.setEncoderParameters(params);
+
         liftMotors.getMotor("left_lift").setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotors.getMotor("right_lift").setDirection(DcMotorSimple.Direction.REVERSE);
 

@@ -31,6 +31,7 @@ public abstract class IMUAutonomous extends OpMode {
      */
 
     // VUFORIA //
+    boolean useVuforia = true;
     private boolean foundVuMark = false;
     RelicRecoveryVuMark vuMark;
     private Vuforia vuforia;
@@ -50,7 +51,7 @@ public abstract class IMUAutonomous extends OpMode {
 
     @Override public final void start() {
         runtime.reset();
-        vuforia.start();
+        if (useVuforia) vuforia.start();
     }
 
     @Override public final void init() {
@@ -61,7 +62,7 @@ public abstract class IMUAutonomous extends OpMode {
 
         stages = setStages();
 
-        vuforia = new Vuforia();
+        if (useVuforia) vuforia = new Vuforia();
 
         if (useIMU) {
             imu = hardwareMap.get(BNO055IMU.class, getIMUName());
@@ -69,15 +70,15 @@ public abstract class IMUAutonomous extends OpMode {
         }
         runtime = new ElapsedTime();
 
-        vuforia.init(hardwareMap);
+        if (useVuforia) vuforia.init(hardwareMap);
     }
 
     @Override public final void loop() {
-        if (!foundVuMark) {
+        if (!foundVuMark && useVuforia) {
             foundVuMark = vuforia.loop(telemetry);
             return;
         }
-        vuMark = vuforia.getVuMark();
+        if (useVuforia) vuMark = vuforia.getVuMark();
 
         if (stage == stages.length) return;
 
@@ -114,7 +115,8 @@ public abstract class IMUAutonomous extends OpMode {
         }
     }
 
-    final void enableIMU(boolean b) {useIMU=b;}
+    final protected void enableIMU(boolean b) {useIMU=b;}
+    final protected void enableVuforia(boolean b) {useVuforia=b;}
 
     final double getTargetAngle(String corner) {
 //        telemetry.addData("abc","Made it to getTargetAngle(" + corner + ")");

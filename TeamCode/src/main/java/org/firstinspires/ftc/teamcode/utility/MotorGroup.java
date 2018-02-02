@@ -17,6 +17,7 @@ public class MotorGroup {
     private HashMap<String, EncoderParameters> motorParams;
     private ElapsedTime timer;
     public boolean drivingByEncoder = false;
+    private HashMap<DcMotor, Integer> targetPositions;
     private DcMotor trackMotor;
     int newTarget;
 
@@ -99,8 +100,64 @@ public class MotorGroup {
         return busyCount;
     }
 
-    public boolean encoderDrive(double speed, double inches, double timeoutS, String trackMotorName, Telemetry telemetry)
+    public void busyDebug(Telemetry telemetry) {
+        for (String name : motors.keySet()) {
+            telemetry.addData(name, (motors.get(name).isBusy())? "Busy" : "Not Busy");
+        }
+    }
+
+    public void stopRunToPosition() {
+        zero();
+    }
+
+//    public boolean encoderDrive(double speed, double inches, double minimumDriveTime, double timeoutS, String trackMotorName, Telemetry telemetry)
+//    {
+//        if (motorParams.size() != motors.size()) {
+//            telemetry.addData("EncoderDrive","ERROR - EncoderParameters not set!");
+//            return false;
+//        }
+//        if (!drivingByEncoder) { // First section run
+//            telemetry.addData("EncoderDrive","Starting encoderDrive()");
+//            drivingByEncoder = true;
+//            trackMotor = getMotor(trackMotorName);
+//            newTarget = trackMotor.getCurrentPosition() + (int)(inches * motorParams.get(trackMotorName).COUNTS_PER_INCH);
+//
+//            for (String motor : motors.keySet()) {
+//                telemetry.addData("EncoderDrive","Setting target position for " + motor);
+//                motors.get(motor).setTargetPosition(motors.get(motor).getCurrentPosition() + (int)(inches * motorParams.get(motor).COUNTS_PER_INCH));
+//            }
+//
+//            setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//            telemetry.addData("EncoderDrive", "Reset timer!");
+//            timer.reset();
+//            setPower(Math.abs(speed));
+//        }
+//
+//        if (timer.seconds() < timeoutS && getBusyCount() < motors.size()) {
+//            if (telemetry != null) {
+//                telemetry.addData("Path1",  "Running to %7d", newTarget);
+//                for (String name : motors.keySet()) {
+//                    telemetry.addData(name,motors.get(name).getCurrentPosition());
+//                }
+//            }
+//            return false;
+//        } else if (timer.seconds() > minimumDriveTime) {
+//            if (timer.seconds() > timeoutS) telemetry.addData("EncoderDrive","Timed out!");
+//            if (!isBusy()) telemetry.addData("EncoderDrive", "Motors finished driving!");
+//            zero();
+//            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            drivingByEncoder = false;
+//            telemetry.addData("EncoderDrive","Returning true");
+//            return true;
+//        }
+//        return false;
+//    }
+
+    public boolean encoderDriveTest(double speed, double inches, double timeoutS, Telemetry telemetry)
     {
+        telemetry.clear();
+        telemetry.addData("EncoderDrive","Speed: " + speed + ", Inches: " + inches);
         if (motorParams.size() != motors.size()) {
             telemetry.addData("EncoderDrive","ERROR - EncoderParameters not set!");
             return false;
@@ -108,38 +165,70 @@ public class MotorGroup {
         if (!drivingByEncoder) { // First section run
             telemetry.addData("EncoderDrive","Starting encoderDrive()");
             drivingByEncoder = true;
-            trackMotor = getMotor(trackMotorName);
-            newTarget = trackMotor.getCurrentPosition() + (int)(inches * motorParams.get(trackMotorName).COUNTS_PER_INCH);
 
+            setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            targetPositions = new HashMap<>();
             for (String motor : motors.keySet()) {
                 telemetry.addData("EncoderDrive","Setting target position for " + motor);
-                motors.get(motor).setTargetPosition(motors.get(motor).getCurrentPosition() + (int)(inches * motorParams.get(motor).COUNTS_PER_INCH));
+                targetPositions.put(motors.get(motor), motors.get(motor).getCurrentPosition() + (int)(inches * motorParams.get(motor).COUNTS_PER_INCH));
             }
-
-            setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             telemetry.addData("EncoderDrive", "Reset timer!");
             timer.reset();
-            setPower(Math.abs(speed));
+            if (inches > 0)
+                setPower(Math.abs(speed));
+            else
+                setPower(-Math.abs(speed));
         }
 
-        if (timer.seconds() < timeoutS && isBusy()) {
-            if (telemetry != null) {
-                telemetry.addData("Path1",  "Running to %7d", newTarget);
-                for (String name : motors.keySet()) {
-                    telemetry.addData(name,motors.get(name).getCurrentPosition());
+        int finishedCount = 0;
+        for (DcMotor motor : motors.values()) { // Check finished.
+            if (inches < 0) {
+                if (motor.getCurrentPosition() < targetPositions.get(motor)) {
+                    finishedCount++;
+                }
+            } else {
+                if (motor.getCurrentPosition() > targetPositions.get(motor)) {
+                    finishedCount++;
                 }
             }
-            return false;
-        } else {
+        }
+
+        for (String motorName : motors.keySet()) { // Telemetry
+            DcMotor motor = motors.get(motorName);
+            int motorPos = motor.getCurrentPosition();
+            int targetPos = targetPositions.get(motor);
+            telemetry.addData(motorName, "(" + motorPos + " / " + targetPos + ") " + (motorPos/targetPos*100) + " percent complete.");
+        }
+
+        if (finishedCount == motors.size() || timer.seconds() > timeoutS) {
             if (timer.seconds() > timeoutS) telemetry.addData("EncoderDrive","Timed out!");
-            if (!isBusy()) telemetry.addData("EncoderDrive", "Motors finished driving!");
-            zero();
+            else telemetry.addData("EncoderDrive","Motors finished driving!");
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             drivingByEncoder = false;
-            telemetry.addData("EncoderDrive","Returning true");
-            return true;
+        } else {
+            telemetry.addData("Path1",  "Running to %7d", newTarget);
+            for (String name : motors.keySet()) {
+                telemetry.addData(name,motors.get(name).getCurrentPosition());
+            }
         }
+
+        return !drivingByEncoder;
+    }
+
+    public static boolean runAndStopIfFinished(double speed, double inches, double timeoutS, Telemetry telemetry, MotorGroup... groups) {
+        boolean allFinished = false;
+        for (MotorGroup group : groups) {
+            boolean finished = group.encoderDriveTest(speed, inches, timeoutS, telemetry);
+            allFinished = (finished) || allFinished;
+        }
+        if (allFinished) {
+            for (MotorGroup group : groups)
+                group.stopRunToPosition();
+        }
+        return allFinished;
     }
 
     public static class EncoderParameters {
