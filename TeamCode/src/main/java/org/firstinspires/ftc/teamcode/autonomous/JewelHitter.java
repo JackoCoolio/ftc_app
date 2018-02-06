@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 public class JewelHitter {

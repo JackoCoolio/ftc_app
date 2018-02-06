@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.autonomous.main.AutonomousConstants;
+import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @Autonomous(name = "Red: Autonomous C", group = "Red")
