@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
 
 import java.util.HashMap;
 /**
@@ -18,7 +19,6 @@ public class MotorGroup {
     private ElapsedTime timer;
     public boolean drivingByEncoder = false;
     private HashMap<DcMotor, Integer> targetPositions;
-    int newTarget;
 
     int encoderDriveCount = 0;
 
@@ -38,7 +38,7 @@ public class MotorGroup {
         return this; // Returns itself for easy chaining.
     }
 
-    public void flip() {
+    @Deprecated public void flip() {
         for (DcMotor motor : motors.values()) {
             if (motor.getDirection().equals(DcMotorSimple.Direction.FORWARD))
                 motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,6 +63,7 @@ public class MotorGroup {
             m.setPower(0d);
         }
     }
+
     public static void zero(MotorGroup... groups) {for (MotorGroup group : groups) group.zero();}
 
     public DcMotor getMotor(String _name) {
@@ -82,11 +83,11 @@ public class MotorGroup {
         }
     }
 
-    public void setEncoderParameters(EncoderParameters params, String motor) {
+    @Deprecated public void setEncoderParameters(EncoderParameters params, String motor) {
         motorParams.put(motor, params);
     }
 
-    public boolean isBusy() {
+    @Deprecated public boolean isBusy() {
         int busyCount = 0;
         for (DcMotor motor : motors.values()) {
             if (motor.isBusy()) busyCount++;
@@ -94,7 +95,7 @@ public class MotorGroup {
         return (busyCount > 0);
     }
 
-    public int getBusyCount() {
+    @Deprecated public int getBusyCount() {
         int busyCount = 0;
         for (DcMotor motor : motors.values()) {
             if (motor.isBusy()) busyCount++;
@@ -102,7 +103,7 @@ public class MotorGroup {
         return busyCount;
     }
 
-    public void busyDebug(Telemetry telemetry) {
+    @Deprecated public void busyDebug(Telemetry telemetry) {
         for (String name : motors.keySet()) {
             telemetry.addData(name, (motors.get(name).isBusy())? "Busy" : "Not Busy");
         }
@@ -112,7 +113,7 @@ public class MotorGroup {
         zero();
     }
 
-    public boolean encodersCalibrated(Telemetry telemetry) {
+    public boolean encodersCalibrated(Telemetry telemetry, ElapsedTime timer) {
         int count = 0;
         for (DcMotor motor : motors.values())
             count += motor.getCurrentPosition();
@@ -121,9 +122,51 @@ public class MotorGroup {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             return true;
         } else {
+            if (timer.seconds() > 5) {
+                for (DcMotor motor : motors.values()) {
+                    if (motor.getCurrentPosition() != 0) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
+            }
             telemetry.addData("Encoder Status","Waiting for encoders to reset.");
             return false;
         }
+    }
+
+    public static IMUAutonomous.Stage calibrateStage(final Telemetry telemetry, final MotorGroup... groups) {
+        return new IMUAutonomous.Stage() {
+
+            boolean[] calibrated;
+            @Override
+            public void setup(double heading, ElapsedTime runtime) {
+                runtime.reset();
+                calibrated = new boolean[groups.length];
+                for (boolean b : calibrated) b = false;
+
+                for (MotorGroup group : groups) {
+                    group.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
+            }
+
+            @Override
+            public boolean run(double heading, ElapsedTime runtime) {
+                for (int i = 0; i < groups.length; i++) {
+                    if (!calibrated[i]) {
+                        telemetry.addData("Calibrating encoders","MotorGroup " + i + " of " + groups.length);
+                        calibrated[i] = groups[i].encodersCalibrated(telemetry, runtime);
+                        break;
+                    }
+                }
+                return allTrue(calibrated);
+            }
+
+            private boolean allTrue(boolean[] b) {
+                boolean all = true;
+                for (boolean bool : b) {
+                    if (!bool) all = false;
+                }
+                return all;
+            }
+        };
     }
 
 //    public boolean encoderDrive(double speed, double inches, double minimumDriveTime, double timeoutS, String trackMotorName, Telemetry telemetry)
