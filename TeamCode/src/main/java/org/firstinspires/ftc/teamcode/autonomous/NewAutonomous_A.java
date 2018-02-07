@@ -26,11 +26,6 @@ public class NewAutonomous_A extends IMUAutonomous {
 
         return new Stage[] {
                 JewelHitter.getStage(robot, JewelHitter.Color.Blue, telemetry),
-                MotorGroup.calibrateStage(
-                        telemetry,
-                        robot.leftMotors,
-                        robot.rightMotors
-                ),
                 new Stage() {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
@@ -60,10 +55,7 @@ public class NewAutonomous_A extends IMUAutonomous {
                     double target;
 
                     public void setup(double heading, ElapsedTime runtime) {
-                        robot.lift.setPower(0.95);
-
                         target = vuMarkAngles.get("A").get(vuMark);
-
                         startHeading = heading;
                     }
 
@@ -83,12 +75,15 @@ public class NewAutonomous_A extends IMUAutonomous {
                         }
                     }
                 },
+                MotorGroup.calibrateStage(
+                        telemetry,
+                        robot.leftMotors,
+                        robot.rightMotors
+                ),
                 new Stage() {
                     double dist;
                     @Override public void setup(double heading, ElapsedTime runtime) {dist = vuMarkDistances.get("A").get(vuMark);}
-
-                    @Override
-                    public boolean run(double heading, ElapsedTime runtime) {
+                    @Override public boolean run(double heading, ElapsedTime runtime) {
                         return MotorGroup.runAndStopIfFinished(
                                 AutonomousConstants.DRIVE_SPEED,
                                 dist,
@@ -99,22 +94,7 @@ public class NewAutonomous_A extends IMUAutonomous {
                         );
                     }
                 },
-                new Stage() {
-
-                    @Override public void setup(double heading, ElapsedTime runtime) {
-                        runtime.reset();
-                        robot.liftMotors.setPower(-0.95);
-                    }
-
-                    @Override
-                    public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() > 3) {
-                            robot.liftMotors.zero();
-                            return true;
-                        }
-                        return false;
-                    }
-                },
+                StagePresets.runByTime(3, -.95, robot.liftMotors),
                 StagePresets.drive(
                         AutonomousConstants.DRIVE_SPEED,
                         12,
