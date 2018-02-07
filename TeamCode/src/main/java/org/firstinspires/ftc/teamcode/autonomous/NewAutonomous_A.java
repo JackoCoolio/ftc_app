@@ -25,11 +25,29 @@ public class NewAutonomous_A extends IMUAutonomous {
         StagePresets.driveMotorGroups = new MotorGroup[] {robot.leftMotors, robot.rightMotors};
 
         return new Stage[] {
+                JewelHitter.getStage(robot, JewelHitter.Color.Blue, telemetry),
                 MotorGroup.calibrateStage(
                         telemetry,
                         robot.leftMotors,
                         robot.rightMotors
                 ),
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < 6) {
+                            robot.lift.setPower(0.95);
+                            return false;
+                        } else {
+                            robot.lift.zero();
+                            return true;
+                        }
+                    }
+                },
                 StagePresets.drive(
                         AutonomousConstants.DRIVE_SPEED,
                         24,
@@ -80,7 +98,35 @@ public class NewAutonomous_A extends IMUAutonomous {
                                 robot.rightMotors
                         );
                     }
-                }
+                },
+                new Stage() {
+
+                    @Override public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                        robot.liftMotors.setPower(-0.95);
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() > 3) {
+                            robot.liftMotors.zero();
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                StagePresets.drive(
+                        AutonomousConstants.DRIVE_SPEED,
+                        12,
+                        3,
+                        telemetry
+                ),
+                StagePresets.drive(
+                        AutonomousConstants.DRIVE_SPEED,
+                        -6,
+                        2,
+                        telemetry
+                )
         };
     }
 }
