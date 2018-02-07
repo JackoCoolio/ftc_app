@@ -99,4 +99,22 @@ public class StagePresets {
         };
     }
 
+    public static IMUAutonomous.Stage runByTime(final double time, final double power, final MotorGroup... groups) {
+        return new IMUAutonomous.Stage() {
+            @Override
+            public void setup(double heading, ElapsedTime runtime) {
+                runtime.reset();
+                for (MotorGroup group : groups) group.setPower(power);
+            }
+
+            @Override
+            public boolean run(double heading, ElapsedTime runtime) {
+                if (runtime.seconds() > time) {
+                    for (MotorGroup group : groups) group.zero();
+                    return true;
+                } else return false;
+            }
+        };
+    }
+
 }
