@@ -206,21 +206,21 @@ public abstract class IMUAutonomous extends OpMode {
         vuMarkDistances.put("C", new HashMap<RelicRecoveryVuMark, Double>());
         vuMarkDistances.put("D", new HashMap<RelicRecoveryVuMark, Double>());
 
-        vuMarkDistances.get("A").put(RelicRecoveryVuMark.LEFT, 22.5);
-        vuMarkDistances.get("A").put(RelicRecoveryVuMark.CENTER, 25.0);
-        vuMarkDistances.get("A").put(RelicRecoveryVuMark.RIGHT, 30.0);
+        vuMarkDistances.get("A").put(RelicRecoveryVuMark.LEFT, 5.0);
+        vuMarkDistances.get("A").put(RelicRecoveryVuMark.CENTER, 9.0);
+        vuMarkDistances.get("A").put(RelicRecoveryVuMark.RIGHT, 13.0);
 
-        vuMarkDistances.get("B").put(RelicRecoveryVuMark.LEFT, 22.5);
-        vuMarkDistances.get("B").put(RelicRecoveryVuMark.CENTER, 25.0);
-        vuMarkDistances.get("B").put(RelicRecoveryVuMark.RIGHT, 30.0);
+        vuMarkDistances.get("B").put(RelicRecoveryVuMark.LEFT, 5.0);
+        vuMarkDistances.get("B").put(RelicRecoveryVuMark.CENTER, 6.0);
+        vuMarkDistances.get("B").put(RelicRecoveryVuMark.RIGHT, 10.0);
 
-        vuMarkDistances.get("C").put(RelicRecoveryVuMark.LEFT, 30.0);
-        vuMarkDistances.get("C").put(RelicRecoveryVuMark.CENTER, 25.0);
-        vuMarkDistances.get("C").put(RelicRecoveryVuMark.RIGHT, 22.5);
+        vuMarkDistances.get("C").put(RelicRecoveryVuMark.LEFT, 13.0);
+        vuMarkDistances.get("C").put(RelicRecoveryVuMark.CENTER, 9.0);
+        vuMarkDistances.get("C").put(RelicRecoveryVuMark.RIGHT, 5.5);
 
-        vuMarkDistances.get("D").put(RelicRecoveryVuMark.LEFT, 30.0);
-        vuMarkDistances.get("D").put(RelicRecoveryVuMark.CENTER, 25.0);
-        vuMarkDistances.get("D").put(RelicRecoveryVuMark.RIGHT, 22.5);
+        vuMarkDistances.get("D").put(RelicRecoveryVuMark.LEFT, 10.0);
+        vuMarkDistances.get("D").put(RelicRecoveryVuMark.CENTER, 6.0);
+        vuMarkDistances.get("D").put(RelicRecoveryVuMark.RIGHT, 5.0);
 
 
     }
