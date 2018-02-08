@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.main.AutonomousConstants;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
  * Created by jacktwamb52 on 2/7/2018.
  */
 
+@Autonomous(name = "New Autonomous C")
 public class NewAutonomous_C extends IMUAutonomous {
 
     Robot robot;
