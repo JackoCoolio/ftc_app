@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.hardware.RelicArm;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 @TeleOp(name = "The one that works")
@@ -77,6 +78,20 @@ public class OpMan extends OpMode {
             winchPower = -.95;
         } else {
             winchPower = 0;
+        }
+
+         if (gamepad1.back) {
+            robot.relicArm.setMode(RelicArm.Mode.Extend);
+         } else if (gamepad1.start) {
+             robot.relicArm.setMode(RelicArm.Mode.Pivot);
+         }
+
+         robot.relicArm.motor(-gamepad1.right_trigger + gamepad1.left_trigger);
+
+        if (gamepad1.b) {
+            robot.relicArm.close();
+        } else if (gamepad1.x) {
+            robot.relicArm.open();
         }
 
         if (driveSlow) { // If slow-mode is on, multiply drive speed.

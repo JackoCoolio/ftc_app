@@ -38,16 +38,18 @@ public class Robot {
     static final double WHEEL_DIAMETER_INCHES = 3.75;
 
     public MotorGroup leftMotors, rightMotors, liftMotors, lift;
-
     public Servo lrServo, udServo;
 
     public ColorSensor colorSensor;
-
+    public RelicArm relicArm;
     private HardwareMap hardwareMap;
 
     public Robot(HardwareMap hardwareMap) {
 
         this.hardwareMap = hardwareMap;
+
+        this.relicArm = new RelicArm(hardwareMap);
+
         init();
 
     }
@@ -77,7 +79,6 @@ public class Robot {
 
         lrServo = hardwareMap.servo.get("left_right");
         udServo = hardwareMap.servo.get("up_down");
-
         colorSensor = hardwareMap.colorSensor.get("color");
     }
 
