@@ -34,7 +34,7 @@ public class NewAutonomous_A extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 6) {
+                        if (runtime.seconds() < 2) {
                             robot.lift.setPower(0.95);
                             return false;
                         } else {
@@ -49,6 +49,25 @@ public class NewAutonomous_A extends IMUAutonomous {
                         4,
                         telemetry
                 ),
+
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < 4) {
+                            robot.lift.setPower(0.95);
+                            return false;
+                        } else {
+                            robot.lift.zero();
+                            return true;
+                        }
+                    }
+                },
+
                 new Stage() { // Turn towards correct slot.
 
                     double startHeading;

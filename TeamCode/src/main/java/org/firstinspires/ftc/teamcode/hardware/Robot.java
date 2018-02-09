@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
@@ -37,6 +38,8 @@ public class Robot {
     static final double DRIVE_GEAR_REDUCTION = 2; // ?
     static final double WHEEL_DIAMETER_INCHES = 3.75;
 
+    public ElapsedTime timer;
+
     public MotorGroup leftMotors, rightMotors, liftMotors, lift;
     public Servo lrServo, udServo;
 
@@ -47,14 +50,18 @@ public class Robot {
     public Robot(HardwareMap hardwareMap) {
 
         this.hardwareMap = hardwareMap;
+        timer = new ElapsedTime(15);
 
-        this.relicArm = new RelicArm(hardwareMap);
+        //this.relicArm = new RelicArm(hardwareMap);
 
         init();
 
     }
 
-    private void init() {
+    public void init() {
+        if(timer.seconds() < 10) return;
+        timer.reset();
+
         lift = new MotorGroup(hardwareMap,"lift");
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotors = new MotorGroup(hardwareMap, "front_left", "rear_left");

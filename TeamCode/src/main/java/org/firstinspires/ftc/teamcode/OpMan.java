@@ -13,6 +13,7 @@ public class OpMan extends OpMode {
     private double leftDrivePower, rightDrivePower;
     private double leftLiftPower, rightLiftPower;
     private double winchPower;
+    private double relicArmMotorPower;
     // POWER VARIABLES FOR DEBUGGING //
 
     // CONTROL BOOLEANS //
@@ -39,6 +40,8 @@ public class OpMan extends OpMode {
 
     @Override
     public void loop() {
+
+        if (gamepad1.start) robot.init();
 
         driveSlow = false; // Reset boolean to false every cycle.
 
@@ -80,24 +83,30 @@ public class OpMan extends OpMode {
             winchPower = 0;
         }
 
-         if (gamepad1.back) {
+        /*
+         if (gamepad2.back) {
             robot.relicArm.setMode(RelicArm.Mode.Extend);
-         } else if (gamepad1.start) {
+         } else if (gamepad2.start) {
              robot.relicArm.setMode(RelicArm.Mode.Pivot);
          }
 
-         robot.relicArm.motor(-gamepad1.right_trigger + gamepad1.left_trigger);
 
-        if (gamepad1.b) {
+        relicArmMotorPower = -gamepad2.right_trigger + gamepad2.left_trigger;
+
+
+        if (gamepad2.b) {
             robot.relicArm.close();
-        } else if (gamepad1.x) {
+        } else if (gamepad2.x) {
             robot.relicArm.open();
         }
+        */
 
         if (driveSlow) { // If slow-mode is on, multiply drive speed.
             leftDrivePower *= drivePowerMult;
             rightDrivePower *= drivePowerMult;
         }
+
+        //robot.relicArm.motor(relicArmMotorPower, telemetry);
 
         robot.lift.setPower(winchPower); // Set power for all motors using values calculated above.
 

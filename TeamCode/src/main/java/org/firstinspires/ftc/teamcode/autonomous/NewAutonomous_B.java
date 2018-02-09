@@ -33,7 +33,7 @@ public class NewAutonomous_B  extends IMUAutonomous {
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
-                        if (runtime.seconds() < 6) {
+                        if (runtime.seconds() < 2) {
                             robot.lift.setPower(0.95);
                             return false;
                         } else {
@@ -50,6 +50,27 @@ public class NewAutonomous_B  extends IMUAutonomous {
                         4,
                         telemetry
                 ),
+
+                new Stage() {
+                    @Override
+                    public void setup(double heading, ElapsedTime runtime) {
+                        runtime.reset();
+                    }
+
+                    @Override
+                    public boolean run(double heading, ElapsedTime runtime) {
+                        if (runtime.seconds() < 2) {
+                            robot.lift.setPower(0.95);
+                            return false;
+                        } else {
+                            robot.lift.zero();
+                            return true;
+
+                        }
+
+                    }
+                },
+
                 new Stage() { //Turns towards the correct slot.
                     double startHeading;
                     double target;
@@ -69,13 +90,13 @@ public class NewAutonomous_B  extends IMUAutonomous {
                         telemetry.addData("Heading", heading);
                         telemetry.addData("Target angle", startHeading + target);
                         telemetry.addData("Target offset", target);
-                        if (heading > startHeading + target) {
+                        if (heading < startHeading + target) {
                             robot.leftMotors.zero();
                             robot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(-AutonomousConstants.TURN_SPEED);
-                            robot.rightMotors.setPower(AutonomousConstants.TURN_SPEED);
+                            robot.leftMotors.setPower(AutonomousConstants.TURN_SPEED);
+                            robot.rightMotors.setPower(-AutonomousConstants.TURN_SPEED);
                             return false;
                         }
                     }
