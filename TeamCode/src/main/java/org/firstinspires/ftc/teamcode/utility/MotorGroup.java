@@ -113,6 +113,13 @@ public class MotorGroup {
         zero();
     }
 
+    public int encoderCount() {
+        int count = 0;
+        for (DcMotor motor : motors.values())
+            count += motor.getCurrentPosition();
+        return count;
+    }
+
     public boolean encodersCalibrated(Telemetry telemetry, ElapsedTime timer) {
         int count = 0;
         for (DcMotor motor : motors.values())
@@ -145,11 +152,11 @@ public class MotorGroup {
             public void setup(double heading, ElapsedTime runtime) {
                 runtime.reset();
                 calibrated = new boolean[groups.length];
-                for (boolean b : calibrated) b = false;
+                for (int i = 0; i < calibrated.length; i++) calibrated[i] = false;
 
-                for (MotorGroup group : groups) {
-                    group.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                }
+                for (MotorGroup group : groups)
+                    for (DcMotor motor : group.motors.values())
+                        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             @Override
@@ -157,7 +164,7 @@ public class MotorGroup {
                 for (int i = 0; i < groups.length; i++) {
                     if (!calibrated[i]) {
                         telemetry.addData("Calibrating encoders","MotorGroup " + i + " of " + groups.length);
-                        calibrated[i] = groups[i].encodersCalibrated(telemetry, runtime);
+                        calibrated[i] = (groups[i].encoderCount() == 0);
                         break;
                     }
                 }
@@ -165,11 +172,9 @@ public class MotorGroup {
             }
 
             private boolean allTrue(boolean[] b) {
-                boolean all = true;
-                for (boolean bool : b) {
-                    if (!bool) all = false;
-                }
-                return all;
+                for (boolean bool : b)
+                    if (!bool) return false;
+                return true;
             }
         };
     }
