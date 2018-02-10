@@ -53,6 +53,11 @@ public class NewAutonomous_B  extends IMUAutonomous {
 
                 new Stage() {
                     @Override
+                    public String getName(int index) {
+                        return "run lifts 2s";
+                    }
+
+                    @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
                     }
@@ -110,6 +115,12 @@ public class NewAutonomous_B  extends IMUAutonomous {
 
                 new Stage() {
                     double dist;
+
+                    @Override
+                    public String getName(int index) {
+                        return "drive to slot";
+                    }
+
                     @Override public void setup(double heading, ElapsedTime runtime) {dist = vuMarkDistances.get("B").get(vuMark);}
 
                     @Override

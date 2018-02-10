@@ -106,6 +106,7 @@ public abstract class IMUAutonomous extends OpMode {
         }
 
         try {
+            telemetry.addData("Stage",stages[stage].getName(stage));
             cont = stages[stage].run(heading, runtime);
         } catch (Exception e) {
 
@@ -158,6 +159,9 @@ public abstract class IMUAutonomous extends OpMode {
     public abstract Stage[] setStages();
 
     public static abstract class Stage {
+        public String getName(int index) {
+            return String.valueOf(index);
+        }
         public void setup(double heading, ElapsedTime runtime) {}
         abstract public boolean run(double heading, ElapsedTime runtime);
     }
@@ -206,21 +210,21 @@ public abstract class IMUAutonomous extends OpMode {
         vuMarkDistances.put("C", new HashMap<RelicRecoveryVuMark, Double>());
         vuMarkDistances.put("D", new HashMap<RelicRecoveryVuMark, Double>());
 
-        vuMarkDistances.get("A").put(RelicRecoveryVuMark.LEFT, 5.0);
-        vuMarkDistances.get("A").put(RelicRecoveryVuMark.CENTER, 9.0);
-        vuMarkDistances.get("A").put(RelicRecoveryVuMark.RIGHT, 13.0);
+        vuMarkDistances.get("A").put(RelicRecoveryVuMark.LEFT, 7.5);
+        vuMarkDistances.get("A").put(RelicRecoveryVuMark.CENTER, 11.5);
+        vuMarkDistances.get("A").put(RelicRecoveryVuMark.RIGHT, 15.5);
 
-        vuMarkDistances.get("B").put(RelicRecoveryVuMark.LEFT, 5.0);
-        vuMarkDistances.get("B").put(RelicRecoveryVuMark.CENTER, 6.0);
-        vuMarkDistances.get("B").put(RelicRecoveryVuMark.RIGHT, 10.0);
+        vuMarkDistances.get("B").put(RelicRecoveryVuMark.LEFT, 7.5);
+        vuMarkDistances.get("B").put(RelicRecoveryVuMark.CENTER, 8.5);
+        vuMarkDistances.get("B").put(RelicRecoveryVuMark.RIGHT, 12.5);
 
-        vuMarkDistances.get("C").put(RelicRecoveryVuMark.LEFT, 13.0);
-        vuMarkDistances.get("C").put(RelicRecoveryVuMark.CENTER, 9.0);
-        vuMarkDistances.get("C").put(RelicRecoveryVuMark.RIGHT, 5.5);
+        vuMarkDistances.get("C").put(RelicRecoveryVuMark.LEFT, 15.5);
+        vuMarkDistances.get("C").put(RelicRecoveryVuMark.CENTER, 11.5);
+        vuMarkDistances.get("C").put(RelicRecoveryVuMark.RIGHT, 8.0);
 
-        vuMarkDistances.get("D").put(RelicRecoveryVuMark.LEFT, 10.0);
-        vuMarkDistances.get("D").put(RelicRecoveryVuMark.CENTER, 6.0);
-        vuMarkDistances.get("D").put(RelicRecoveryVuMark.RIGHT, 5.0);
+        vuMarkDistances.get("D").put(RelicRecoveryVuMark.LEFT, 12.5);
+        vuMarkDistances.get("D").put(RelicRecoveryVuMark.CENTER, 8.5);
+        vuMarkDistances.get("D").put(RelicRecoveryVuMark.RIGHT, 7.5);
 
 
     }

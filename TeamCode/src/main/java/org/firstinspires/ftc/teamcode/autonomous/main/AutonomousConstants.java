@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode.autonomous.main;
  */
 
 public class AutonomousConstants {
-    public static final double TURN_SPEED = .3d;
+    public static final double TURN_SPEED = .25d;
     public static final double DRIVE_SPEED = .5d;
     public static final double LIFT_SPEED = .5d;
 

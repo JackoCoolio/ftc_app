@@ -135,6 +135,11 @@ public class MotorGroup {
     public static IMUAutonomous.Stage calibrateStage(final Telemetry telemetry, final MotorGroup... groups) {
         return new IMUAutonomous.Stage() {
 
+            @Override
+            public String getName(int index) {
+                return "Calibrating. Index #" + index + ".";
+            }
+
             boolean[] calibrated;
             @Override
             public void setup(double heading, ElapsedTime runtime) {
