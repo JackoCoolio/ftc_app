@@ -1,16 +1,18 @@
 package org.firstinspires.ftc.teamcode.autonomous.jewels;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.GlyphRobot;
 
+@Disabled
 @Autonomous(name="ServoArm")
 public class TestJewel extends OpMode {
 
-    private Robot robot;
+    private GlyphRobot glyphRobot;
 
     private enum Color {
         Unknown,
@@ -33,7 +35,7 @@ public class TestJewel extends OpMode {
     @Override
     public void init() {
 
-        robot = new Robot(hardwareMap);
+        glyphRobot = new GlyphRobot(hardwareMap);
 
     }
 
@@ -41,8 +43,8 @@ public class TestJewel extends OpMode {
     public void start() {
 
         // Set servo positions.
-        robot.lrServo.setPosition(defaultMiddle);
-        robot.udServo.setPosition(downPosition);
+        glyphRobot.lrServo.setPosition(defaultMiddle);
+        glyphRobot.udServo.setPosition(downPosition);
 
     }
 
@@ -50,18 +52,18 @@ public class TestJewel extends OpMode {
     public void loop() {
 
         // Lower vertical servo.
-        robot.udServo.setPosition(lerp(robot.udServo.getPosition(), downPosition, servoSpeed));
+        glyphRobot.udServo.setPosition(lerp(glyphRobot.udServo.getPosition(), downPosition, servoSpeed));
 
         // Useful debug information.
         telemetry.addData("Pushed",String.valueOf(pushed));
-        telemetry.addData("Red",robot.colorSensor.red());
-        telemetry.addData("Green",robot.colorSensor.green());
-        telemetry.addData("Blue",robot.colorSensor.blue());
+        telemetry.addData("Red", glyphRobot.colorSensor.red());
+        telemetry.addData("Green", glyphRobot.colorSensor.green());
+        telemetry.addData("Blue", glyphRobot.colorSensor.blue());
 
 
 
         if (!pushed) {
-            Color foundColor = determineColor(robot.colorSensor);
+            Color foundColor = determineColor(glyphRobot.colorSensor);
             telemetry.addData("Color", foundColor.toString());
 
             double push;
@@ -74,15 +76,15 @@ public class TestJewel extends OpMode {
                 push = defaultMiddle + pushDistance;
                 pushed = true;
             }
-            robot.lrServo.setPosition(push);
+            glyphRobot.lrServo.setPosition(push);
             timer.reset();
 
         } else {
             if (timer.seconds() > 2.25)
-                robot.udServo.setPosition(lerp(robot.udServo.getPosition(), upPosition, servoSpeed * 3));
+                glyphRobot.udServo.setPosition(lerp(glyphRobot.udServo.getPosition(), upPosition, servoSpeed * 3));
 
             if (timer.seconds() > 1.5)
-                robot.lrServo.setPosition(lerp(robot.lrServo.getPosition(), defaultMiddle, servoSpeed / 5));
+                glyphRobot.lrServo.setPosition(lerp(glyphRobot.lrServo.getPosition(), defaultMiddle, servoSpeed / 5));
         }
 
     }

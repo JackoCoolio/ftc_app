@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.utility.AdafruitIMU;
  * Created by jacktwamb52 on 1/3/2018.
  */
 
+@Disabled
 @TeleOp(name = "GyroTest")
 public class GyroTest extends OpMode {
 
@@ -76,7 +78,7 @@ public class GyroTest extends OpMode {
         /*
       	* Use the hardwareMap to get the dc motors, servos and other sensors by name. Note
       	* that the names of the devices must match the names used when you
-      	* configured your robot and created the configuration file. The hardware map
+      	* configured your glyphRobot and created the configuration file. The hardware map
       	* for this OpMode is not initialized until the OpModeManager's "startActiveOpMode" method
       	* runs.
     		*/
@@ -108,7 +110,7 @@ public class GyroTest extends OpMode {
 		/*
 		 * Send whatever telemetry data you want back to driver station.
 		 */
-        //telemetry.addData("Text", "*** Robot Data***");
+        //telemetry.addData("Text", "*** GlyphRobot Data***");
         telemetry.addData("Headings(yaw): ",
                 String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
         telemetry.addData("Pitches: ",

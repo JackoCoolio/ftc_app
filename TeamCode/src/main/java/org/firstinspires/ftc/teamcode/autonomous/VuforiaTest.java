@@ -29,6 +29,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -68,6 +69,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation}.
  */
 
+@Disabled
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 public class VuforiaTest extends LinearOpMode {
 
@@ -138,7 +140,7 @@ public class VuforiaTest extends LinearOpMode {
         /*
          * We also indicate which camera on the RC that we wish to use.
          * Here we chose the back (HiRes) camera (for greater range), but
-         * for a competition robot, the front camera might be more convenient.
+         * for a competition glyphRobot, the front camera might be more convenient.
          */
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -190,12 +192,12 @@ public class VuforiaTest extends LinearOpMode {
                         VectorF trans = pose.getTranslation();
                         Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                        // Extract the X, Y, and Z components of the offset of the target relative to the robot
+                        // Extract the X, Y, and Z components of the offset of the target relative to the glyphRobot
                         double tX = trans.get(0);
                         double tY = trans.get(1);
                         double tZ = trans.get(2);
 
-                        // Extract the rotational components of the target relative to the robot
+                        // Extract the rotational components of the target relative to the glyphRobot
                         double rX = rot.firstAngle;
                         double rY = rot.secondAngle;
                         double rZ = rot.thirdAngle;

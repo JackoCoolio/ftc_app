@@ -314,7 +314,7 @@ public class AdafruitIMU implements HardwareDevice, I2cController.I2cPortReadyCa
      * Default configuration for sensors as listed in table 3-7 on p.26
      * Page 0 of the register map is automatically selected (p.50)
      *
-     * Even if the Robot Controller software is restarted without power being cycled, the following
+     * Even if the GlyphRobot Controller software is restarted without power being cycled, the following
      * actions should be done each time the AdafruitIMU class is reconstructed:
      * 1. Set the PAGE_ID register to 0, so that Register Map 0 will make the SYS_TRIGGER register
      *    visible. (Datasheet p.50)

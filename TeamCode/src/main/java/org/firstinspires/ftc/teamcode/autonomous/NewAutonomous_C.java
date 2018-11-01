@@ -1,43 +1,45 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.main.AutonomousConstants;
 import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
 import org.firstinspires.ftc.teamcode.autonomous.main.StagePresets;
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.GlyphRobot;
 import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
 /**
  * Created by jacktwamb52 on 2/7/2018.
  */
 
+@Disabled
 @Autonomous(name = "New Autonomous C")
 public class NewAutonomous_C extends IMUAutonomous {
 
-    Robot robot;
+    GlyphRobot glyphRobot;
 
     @Override
     public Stage[] setStages() {
 
-        robot = new Robot(hardwareMap);
-        StagePresets.driveMotorGroups = new MotorGroup[] {robot.leftMotors, robot.rightMotors};
+        glyphRobot = new GlyphRobot(hardwareMap);
+        StagePresets.driveMotorGroups = new MotorGroup[] {glyphRobot.leftMotors, glyphRobot.rightMotors};
 
         return new Stage[] {
-                JewelHitter.getStage(robot, JewelHitter.Color.Red, telemetry),
+                JewelHitter.getStage(glyphRobot, JewelHitter.Color.Red, telemetry),
                 new Stage() {
 
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
-                        robot.lift.setPower(0.95);
+                        glyphRobot.lift.setPower(0.95);
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() > 2) {
-                            robot.lift.zero();
+                            glyphRobot.lift.zero();
                             return true;
                         }
                         return false;
@@ -55,13 +57,13 @@ public class NewAutonomous_C extends IMUAutonomous {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
-                        robot.lift.setPower(0.95);
+                        glyphRobot.lift.setPower(0.95);
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() > 4) {
-                            robot.lift.zero();
+                            glyphRobot.lift.zero();
                             return true;
                         }
                         return false;
@@ -88,8 +90,8 @@ public class NewAutonomous_C extends IMUAutonomous {
                             MotorGroup.turn(
                                     AutonomousConstants.TURN_SPEED,
                                     MotorGroup.TurnDirection.Left,
-                                    robot.leftMotors,
-                                    robot.rightMotors
+                                    glyphRobot.leftMotors,
+                                    glyphRobot.rightMotors
                             );
                             return false;
                         } else {
@@ -100,8 +102,8 @@ public class NewAutonomous_C extends IMUAutonomous {
                 },
                 MotorGroup.calibrateStage(
                         telemetry,
-                        robot.leftMotors,
-                        robot.rightMotors
+                        glyphRobot.leftMotors,
+                        glyphRobot.rightMotors
                 ),
                 new Stage() {
                     double dist;
@@ -116,7 +118,7 @@ public class NewAutonomous_C extends IMUAutonomous {
                         );
                     }
                 },
-                StagePresets.runByTime(3, -.95, robot.liftMotors),
+                StagePresets.runByTime(3, -.95, glyphRobot.liftMotors),
                 StagePresets.drive(
                         AutonomousConstants.DRIVE_SPEED,
                         12,

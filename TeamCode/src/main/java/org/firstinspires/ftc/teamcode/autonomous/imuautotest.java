@@ -1,24 +1,26 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.GlyphRobot;
 
 /**
  * Created by jacktwamb52 on 1/10/2018.
  */
 
+@Disabled
 @Autonomous(name = "imaautotest")
 public class imuautotest extends IMUAutonomous {
 
-    Robot robot;
+    GlyphRobot glyphRobot;
 
     @Override
     public Stage[] setStages() {
 
-        robot = new Robot(hardwareMap);
+        glyphRobot = new GlyphRobot(hardwareMap);
 
         Stage[] stageList = new Stage[] {
                 new Stage() {
@@ -31,12 +33,12 @@ public class imuautotest extends IMUAutonomous {
 
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (heading > startHeading + 90) {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(0.95);
-                            robot.rightMotors.setPower(-0.95);
+                            glyphRobot.leftMotors.setPower(0.95);
+                            glyphRobot.rightMotors.setPower(-0.95);
                             return false;
                         }
                     }
@@ -51,12 +53,12 @@ public class imuautotest extends IMUAutonomous {
 
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (heading < startHeading - 90) {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(-0.95);
-                            robot.rightMotors.setPower(0.95);
+                            glyphRobot.leftMotors.setPower(-0.95);
+                            glyphRobot.rightMotors.setPower(0.95);
                             return false;
                         }
                     }

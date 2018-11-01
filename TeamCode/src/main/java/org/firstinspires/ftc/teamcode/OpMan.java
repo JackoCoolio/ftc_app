@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.RelicArm;
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.GlyphRobot;
 
+/*
+    This was the main OpMode from our 2017-18 season.
+ */
+@Disabled
 @TeleOp(name = "The one that works")
 public class OpMan extends OpMode {
 
@@ -28,20 +32,20 @@ public class OpMan extends OpMode {
     // CONSTANTS //
 
     // HARDWARE //
-    Robot robot;
+    GlyphRobot glyphRobot;
     // HARDWARE //
 
     @Override
     public void init() {
 
-        robot = new Robot(hardwareMap); // Initialize the robot hardware.
+        glyphRobot = new GlyphRobot(hardwareMap); // Initialize the glyphRobot hardware.
 
     }
 
     @Override
     public void loop() {
 
-        if (gamepad1.start) robot.init();
+        if (gamepad1.start) glyphRobot.init();
 
         driveSlow = false; // Reset boolean to false every cycle.
 
@@ -85,9 +89,9 @@ public class OpMan extends OpMode {
 
         /*
          if (gamepad2.back) {
-            robot.relicArm.setMode(RelicArm.Mode.Extend);
+            glyphRobot.relicArm.setMode(RelicArm.Mode.Extend);
          } else if (gamepad2.start) {
-             robot.relicArm.setMode(RelicArm.Mode.Pivot);
+             glyphRobot.relicArm.setMode(RelicArm.Mode.Pivot);
          }
 
 
@@ -95,9 +99,9 @@ public class OpMan extends OpMode {
 
 
         if (gamepad2.b) {
-            robot.relicArm.close();
+            glyphRobot.relicArm.close();
         } else if (gamepad2.x) {
-            robot.relicArm.open();
+            glyphRobot.relicArm.open();
         }
         */
 
@@ -106,15 +110,15 @@ public class OpMan extends OpMode {
             rightDrivePower *= drivePowerMult;
         }
 
-        //robot.relicArm.motor(relicArmMotorPower, telemetry);
+        //glyphRobot.relicArm.motor(relicArmMotorPower, telemetry);
 
-        robot.lift.setPower(winchPower); // Set power for all motors using values calculated above.
+        glyphRobot.lift.setPower(winchPower); // Set power for all motors using values calculated above.
 
-        robot.leftMotors.setPower(leftDrivePower);
-        robot.rightMotors.setPower(rightDrivePower);
+        glyphRobot.leftMotors.setPower(leftDrivePower);
+        glyphRobot.rightMotors.setPower(rightDrivePower);
 
-        robot.liftMotors.getMotor("left_lift").setPower(leftLiftPower);
-        robot.liftMotors.getMotor("right_lift").setPower(rightLiftPower);
+        glyphRobot.liftMotors.getMotor("left_lift").setPower(leftLiftPower);
+        glyphRobot.liftMotors.getMotor("right_lift").setPower(rightLiftPower);
 
         telemetry(); // Do telemetry in a separate method for easier readability.
 

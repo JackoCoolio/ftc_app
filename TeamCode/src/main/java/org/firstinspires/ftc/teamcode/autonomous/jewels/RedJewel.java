@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous.jewels;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @Autonomous(name="Red Jewel")
 public class RedJewel extends OpMode {
 

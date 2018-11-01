@@ -1,36 +1,38 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.main.AutonomousConstants;
 import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.GlyphRobot;
 
+@Disabled
 @Autonomous (name = "Blue: Autonomous B", group = "Blue")
 public class Autonomous_B extends IMUAutonomous {
 
-    Robot robot;
+    GlyphRobot glyphRobot;
 
     @Override
     public Stage[] setStages() {
 
-        robot = new Robot(hardwareMap);
+        glyphRobot = new GlyphRobot(hardwareMap);
 
         Stage[] stageList = new Stage[] {
-                JewelHitter.getStage(robot, JewelHitter.Color.Blue, telemetry),
+                JewelHitter.getStage(glyphRobot, JewelHitter.Color.Blue, telemetry),
                 new Stage() {// Drive off platform.
 
                     @Override public void setup(double heading, ElapsedTime runtime) { runtime.reset(); }
 
                     @Override public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.DRIVE_OFF_TIME_BD) {
-                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
-                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         }
                     }
@@ -41,19 +43,19 @@ public class Autonomous_B extends IMUAutonomous {
                     double target;
 
                     public void setup(double heading, ElapsedTime runtime) {
-                        robot.lift.setPower(0.95);
+                        glyphRobot.lift.setPower(0.95);
                         startHeading = heading;
                         target = vuMarkAngles.get("B").get(vuMark);
                     }
 
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (heading < startHeading + target) {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         } else {
-                            robot.leftMotors.setPower(AutonomousConstants.TURN_SPEED);
-                            robot.rightMotors.setPower(-AutonomousConstants.TURN_SPEED);
+                            glyphRobot.leftMotors.setPower(AutonomousConstants.TURN_SPEED);
+                            glyphRobot.rightMotors.setPower(-AutonomousConstants.TURN_SPEED);
                             return false;
                         }
                     }
@@ -68,12 +70,12 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.TOWARDS_SLOT_TIME_B) {
-                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
-                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         }
                     }
@@ -83,16 +85,16 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override
                     public void setup(double heading, ElapsedTime runtime) {
                         runtime.reset();
-                        robot.lift.zero();
+                        glyphRobot.lift.zero();
                     }
 
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.LIFT_RUNTIME) {
-                            robot.liftMotors.setPower(-AutonomousConstants.LIFT_SPEED);
+                            glyphRobot.liftMotors.setPower(-AutonomousConstants.LIFT_SPEED);
                             return false;
                         } else {
-                            robot.liftMotors.zero();
+                            glyphRobot.liftMotors.zero();
                             return true;
                         }
                     }
@@ -106,12 +108,12 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.PUSH_TIME) {
-                            robot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
-                            robot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.rightMotors.setPower(AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.leftMotors.setPower(AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         }
                     }
@@ -126,12 +128,12 @@ public class Autonomous_B extends IMUAutonomous {
                     @Override
                     public boolean run(double heading, ElapsedTime runtime) {
                         if (runtime.seconds() < AutonomousConstants.DRIVE_BACK_TIME) {
-                            robot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
-                            robot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.leftMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
+                            glyphRobot.rightMotors.setPower(-AutonomousConstants.DRIVE_SPEED);
                             return false;
                         } else {
-                            robot.leftMotors.zero();
-                            robot.rightMotors.zero();
+                            glyphRobot.leftMotors.zero();
+                            glyphRobot.rightMotors.zero();
                             return true;
                         }
                     }

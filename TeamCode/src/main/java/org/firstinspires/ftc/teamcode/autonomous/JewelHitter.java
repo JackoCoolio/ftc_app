@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
-import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.hardware.GlyphRobot;
 
 public class JewelHitter {
 
@@ -31,34 +31,34 @@ public class JewelHitter {
 
     private boolean seen = false;
 
-    private Robot robot;
+    private GlyphRobot glyphRobot;
 
-    public JewelHitter(Robot robot, Color friendlyColor) {
-        this.robot = robot;
+    public JewelHitter(GlyphRobot glyphRobot, Color friendlyColor) {
+        this.glyphRobot = glyphRobot;
         this.friendlyColor = friendlyColor;
     }
 
     public void start() {
-        robot.lrServo.setPosition(defaultMiddle);
-        robot.udServo.setPosition(downPosition);
+        glyphRobot.lrServo.setPosition(defaultMiddle);
+        glyphRobot.udServo.setPosition(downPosition);
         giveUpTimer.reset();
     }
 
     public boolean run(Telemetry telemetry) {
         // Lower vertical servo.
-        robot.udServo.setPosition(lerp(robot.udServo.getPosition(), downPosition, servoSpeed));
+        glyphRobot.udServo.setPosition(lerp(glyphRobot.udServo.getPosition(), downPosition, servoSpeed));
 
         // Useful debug information.
         telemetry.addData("Seen",String.valueOf(seen));
         telemetry.addData("Pushed",String.valueOf(pushed));
-        telemetry.addData("Red",robot.colorSensor.red());
-        telemetry.addData("Green",robot.colorSensor.green());
-        telemetry.addData("Blue",robot.colorSensor.blue());
+        telemetry.addData("Red", glyphRobot.colorSensor.red());
+        telemetry.addData("Green", glyphRobot.colorSensor.green());
+        telemetry.addData("Blue", glyphRobot.colorSensor.blue());
 
 
 
         if (!seen) {
-            Color foundColor = determineColor(robot.colorSensor);
+            Color foundColor = determineColor(glyphRobot.colorSensor);
 //            telemetry.addData("Color", foundColor.toString());
 
             timer.reset(); // This will run for the last time when we see the ball.
@@ -81,17 +81,17 @@ public class JewelHitter {
 
         } else {
             if (timer.seconds() > 1 && timer.seconds() < 1.25) { //Wait to make sure that the arm is all the way down.
-                robot.lrServo.setPosition(push);
+                glyphRobot.lrServo.setPosition(push);
                 pushed = true;
             }
 
             if (timer.seconds() > 2)
-                robot.udServo.setPosition(lerp(robot.udServo.getPosition(), upPosition, servoSpeed * 3));
+                glyphRobot.udServo.setPosition(lerp(glyphRobot.udServo.getPosition(), upPosition, servoSpeed * 3));
 
             if (timer.seconds() > 1.5)
-                robot.lrServo.setPosition(lerp(robot.lrServo.getPosition(), defaultMiddle, servoSpeed / 3));
+                glyphRobot.lrServo.setPosition(lerp(glyphRobot.lrServo.getPosition(), defaultMiddle, servoSpeed / 3));
 
-            if (timer.seconds() > 3 && robot.udServo.getPosition() == upPosition)
+            if (timer.seconds() > 3 && glyphRobot.udServo.getPosition() == upPosition)
                 return true;
 
             return false;
@@ -130,13 +130,13 @@ public class JewelHitter {
 
     }
 
-    public static IMUAutonomous.Stage getStage(final Robot robot, final Color friendlyColor, final Telemetry telemetry) {
+    public static IMUAutonomous.Stage getStage(final GlyphRobot glyphRobot, final Color friendlyColor, final Telemetry telemetry) {
         return new IMUAutonomous.Stage() {
 
             JewelHitter jewelHitter;
 
             @Override public void setup(double heading, ElapsedTime runtime) {
-                jewelHitter = new JewelHitter(robot, friendlyColor);
+                jewelHitter = new JewelHitter(glyphRobot, friendlyColor);
                 jewelHitter.start();
             }
 

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
  * Created by jacktwamb52 on 1/9/2018.
  */
 
-public class Robot {
+public class GlyphRobot {
 
     /*
     Mapping:
@@ -47,7 +47,7 @@ public class Robot {
     public RelicArm relicArm;
     private HardwareMap hardwareMap;
 
-    public Robot(HardwareMap hardwareMap) {
+    public GlyphRobot(HardwareMap hardwareMap) {
 
         this.hardwareMap = hardwareMap;
         timer = new ElapsedTime(15);
