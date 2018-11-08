@@ -8,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public abstract class Module {
 
     final HardwareMap hardwareMap;
-    final Telemetry telemetry;
-    Gamepad gamepad1, gamepad2;
+    protected final Telemetry telemetry;
+    protected Gamepad gamepad1, gamepad2;
 
     protected Module(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
@@ -22,13 +22,13 @@ public abstract class Module {
         init();
     }
 
-    protected Module(ModuleParameters parameters) {
-        this.hardwareMap = parameters.hardwareMap;
-        this.gamepad1 = parameters.gamepad1;
-        this.gamepad2 = parameters.gamepad2;
-        this.telemetry = parameters.telemetry;
-        init();
-    }
+//    protected Module(ModuleParameters parameters) {
+//        this.hardwareMap = parameters.hardwareMap;
+//        this.gamepad1 = parameters.gamepad1;
+//        this.gamepad2 = parameters.gamepad2;
+//        this.telemetry = parameters.telemetry;
+//        init();
+//    }
 
     public abstract void init();
     public abstract void loop();
