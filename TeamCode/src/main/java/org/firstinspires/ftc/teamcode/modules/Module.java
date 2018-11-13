@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public abstract class Module {
 
-    final HardwareMap hardwareMap;
+    protected final HardwareMap hardwareMap;
     protected final Telemetry telemetry;
     protected Gamepad gamepad1, gamepad2;
 

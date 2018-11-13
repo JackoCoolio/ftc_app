@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 public class DriveModule extends Module {
 
     public MotorGroup leftDrive, rightDrive;
+
     private double leftPower, rightPower;
 
     public DriveModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
@@ -18,7 +19,8 @@ public class DriveModule extends Module {
 
     @Override
     public void init() {
-
+        leftDrive = new MotorGroup(hardwareMap, "left_rear", "left_front");
+        rightDrive = new MotorGroup(hardwareMap, "right_rear", "right_front");
     }
 
     @Override
