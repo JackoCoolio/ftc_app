@@ -5,17 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.TapeMeasureRobot;
 
-/*
-
-    HARDWARE:
-    -left_front, left_rear
-    -right_front, right_rear
-    -arm
-    -grabber1, grabber2
-    -tape_measure
-
- */
-
 @TeleOp(name="Layla")
 public class Layla extends OpMode {
 

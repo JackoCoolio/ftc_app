@@ -7,6 +7,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 import org.firstinspires.ftc.teamcode.utility.Utility;
 
+/*
+
+    HARDWARE:
+    -left_front, left_rear
+    -right_front, right_rear
+    -arm
+    -grabber1, grabber2
+    -tape_measure
+
+ */
+
 public class TapeMeasureRobot extends Robot {
 
     public MotorGroup leftDrive, rightDrive;
