@@ -138,6 +138,7 @@ public abstract class ModuleBasedOpMode extends OpMode {
         telemetry.addData("MODULE INITIALIZATION ERROR","No modules initialized!");
     }
 
+    @SafeVarargs
     protected final void registerModules(Class<? extends Module>... types) {
         telemetry.addData("INITIALIZING MODULES","Modules set.");
         this.types = types;
