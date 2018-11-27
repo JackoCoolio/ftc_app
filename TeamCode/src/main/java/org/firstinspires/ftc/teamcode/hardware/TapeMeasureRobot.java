@@ -9,15 +9,15 @@ import org.firstinspires.ftc.teamcode.utility.Utility;
 
 public class TapeMeasureRobot extends Robot {
 
-    MotorGroup leftDrive, rightDrive;
-    DcMotor tapeMeasure, arm;
+    public MotorGroup leftDrive, rightDrive;
+    public DcMotor tapeMeasure, arm;
 
-    Servo grabber;
+    public Servo grabber1, grabber2;
 
     /*
     Config
      */
-    private final double servoSpeed = .001d;
+    private final double servoSpeed = .01d;
     private final double openPosition = 0d;
     private final double closedPosition = 1d;
     /*
@@ -38,7 +38,8 @@ public class TapeMeasureRobot extends Robot {
 
         arm = hardwareMap.dcMotor.get("arm");
 
-        grabber = hardwareMap.servo.get("grabber");
+        grabber1 = hardwareMap.servo.get("grabber1");
+        grabber2 = hardwareMap.servo.get("grabber2");
 
     }
 
@@ -51,11 +52,13 @@ public class TapeMeasureRobot extends Robot {
     }
 
     public void grab() {
-        grabber.setPosition(Utility.lerp(grabber.getPosition(), closedPosition, servoSpeed));
+        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), closedPosition, servoSpeed));
+        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
     }
 
     public void release() {
-        grabber.setPosition(Utility.lerp(grabber.getPosition(), openPosition, servoSpeed));
+        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), openPosition, servoSpeed));
+        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
     }
 
 }
