@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -28,9 +29,9 @@ public class TapeMeasureRobot extends Robot {
     /*
     Config
      */
-    private final double servoSpeed = .01d;
-    private final double openPosition = 0d;
-    private final double closedPosition = 1d;
+    public final double servoSpeed = .01d;
+    public final double openPosition = .5d;
+    public final double closedPosition = 1d;
     /*
     Config
      */
@@ -44,14 +45,27 @@ public class TapeMeasureRobot extends Robot {
 
         leftDrive = new MotorGroup(hardwareMap, "left_front", "left_rear");
         rightDrive = new MotorGroup(hardwareMap, "right_front", "right_rear");
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         tapeMeasure = hardwareMap.dcMotor.get("tape_measure");
 
         arm = hardwareMap.dcMotor.get("arm");
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         grabber1 = hardwareMap.servo.get("grabber1");
         grabber2 = hardwareMap.servo.get("grabber2");
 
+        grabber1.setDirection(Servo.Direction.REVERSE);
+
+        grabber1.setPosition(openPosition);
+        grabber2.setPosition(openPosition);
+
+
+
+    }
+
+    public double mapServoPosition(double value, double min, double max) {
+        return value*(max-min) + min;
     }
 
     public void extend(double speed) {
@@ -67,9 +81,13 @@ public class TapeMeasureRobot extends Robot {
         grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
     }
 
-    public void release() {
-        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), openPosition, servoSpeed));
-        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
+    public double[] release() {
+        double p1, p2;
+        p1 = Utility.lerp(grabber1.getPosition(), openPosition, servoSpeed);
+        p2 = Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed);
+        grabber1.setPosition(p1);
+        grabber2.setPosition(p2);
+        return new double[] {p1,p2};
     }
 
 }

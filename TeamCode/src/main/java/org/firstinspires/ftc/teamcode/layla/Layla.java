@@ -25,6 +25,7 @@ public class Layla extends OpMode {
 
     }
 
+    double[] values;
     @Override
     public void loop() {
 
@@ -34,23 +35,27 @@ public class Layla extends OpMode {
         // Gamepad 1 Controls
 
         // Gamepad 2 Controls
-        robot.arm.setPower(-gamepad2.right_stick_y);
+        robot.arm.setPower(-gamepad2.right_stick_y*.5d);
 
-        if (gamepad2.right_trigger >= .1) {
-            robot.grab();
-            grabbing = true;
-            releasing = false;
-        } else {
-            robot.release();
-            grabbing = false;
-            releasing = true;
-        }
+//        if (gamepad2.right_trigger >= .1) {
+//            robot.grab();
+//            grabbing = true;
+//            releasing = false;
+//        } else {
+//            values = robot.release();
+//            grabbing = false;
+//            releasing = true;
+//        }
+
+//        robot.grabber1.setPosition(robot.mapServoPosition(-gamepad2.right_trigger, robot.closedPosition, robot.openPosition));
+//        robot.grabber2.setPosition(robot.mapServoPosition(-gamepad2.right_trigger, robot.closedPosition, robot.openPosition));
 
         if (-gamepad2.left_stick_y > .1) {
             robot.extend(Math.abs(gamepad2.left_stick_y));
         } else if (-gamepad2.left_stick_y < .1) {
             robot.retract(Math.abs(gamepad2.left_stick_y));
         }
+
         // Gamepad 2 Controls
 
         // Telemetry
@@ -61,6 +66,7 @@ public class Layla extends OpMode {
 
     private void telemetry() {
 
+        telemetry.addData("Servo", "g1: " + robot.grabber1.getPosition() + ", g2: " + robot.grabber2.getPosition());
         telemetry.addData("Driving", "Left = " + leftPower + ", Right = " + rightPower);
 
         GrabberStatus status;
