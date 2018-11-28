@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous.main;
 
+import android.nfc.TagLostException;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.utility.DelayedValue;
 import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
 /**
@@ -23,43 +26,21 @@ public class StagePresets {
         } else {
             groups = _groups;
         }
-        return new IMUAutonomous.Stage() {
+        return new DriveStage(speed, inches, timeout, telemetry, groups);
+    }
 
-            boolean[] calibrated;
-            boolean allCalibrated = false;
-
+    public static IMUAutonomous.Stage drive(final double speed, final DelayedValue<Double> inchGetter, final double timeout, final Telemetry telemetry, final MotorGroup... _groups) {
+        final MotorGroup[] groups;
+        if (_groups.length == 0) {
+            groups = driveMotorGroups;
+        } else {
+            groups = _groups;
+        }
+        return new DriveStage(speed, 0, timeout, telemetry, groups) {
             @Override
             public void setup(double heading, ElapsedTime runtime) {
-                runtime.reset();
-                calibrated = new boolean[groups.length];
-                for (boolean b : calibrated) b = false;
-                for (MotorGroup group : groups) group.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-
-            @Override
-            public boolean run(double heading, ElapsedTime runtime) {
-                if (!allCalibrated) {
-                    for (int i = 0; i < groups.length; i++) {
-                        if (!calibrated[i]) {
-                            telemetry.addData("Calibrating encoders","MotorGroup " + i + " of " + groups.length);
-                            calibrated[i] = groups[i].encodersCalibrated(telemetry, runtime);
-                            break;
-                        }
-                    }
-
-                    allCalibrated = allTrue(calibrated);
-                    return false;
-                } else {
-                    return MotorGroup.runAndStopIfFinished(speed, inches, timeout, telemetry, groups);
-                }
-            }
-
-            private boolean allTrue(boolean[] b) {
-                boolean all = true;
-                for (boolean bool : b) {
-                    if (!bool) all = false;
-                }
-                return all;
+                inches = inchGetter.getValue();
+                super.setup(heading, runtime);
             }
         };
     }
@@ -115,6 +96,58 @@ public class StagePresets {
                 } else return false;
             }
         };
+    }
+
+    public static class DriveStage extends IMUAutonomous.Stage {
+
+        protected double speed, inches, timeout;
+        protected Telemetry telemetry;
+        protected MotorGroup[] groups;
+
+        protected boolean[] calibrated;
+        protected boolean allCalibrated = false;
+
+        public DriveStage(double speed, double inches, double timeout, Telemetry telemetry, MotorGroup... groups) {
+            this.speed = speed;
+            this.inches = inches;
+            this.timeout = timeout;
+            this.telemetry = telemetry;
+            this.groups = groups;
+        }
+
+        @Override
+        public void setup(double heading, ElapsedTime runtime) {
+            runtime.reset();
+            calibrated = new boolean[groups.length];
+            for (boolean b : calibrated) b = false;
+            for (MotorGroup group : groups) group.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+        @Override
+        public boolean run(double heading, ElapsedTime runtime) {
+            if (!allCalibrated) {
+                for (int i = 0; i < groups.length; i++) {
+                    if (!calibrated[i]) {
+                        telemetry.addData("Calibrating encoders","MotorGroup " + i + " of " + groups.length);
+                        calibrated[i] = groups[i].encodersCalibrated(telemetry, runtime);
+                        break;
+                    }
+                }
+
+                allCalibrated = allTrue(calibrated);
+                return false;
+            } else {
+                return MotorGroup.runAndStopIfFinished(speed, inches, timeout, telemetry, groups);
+            }
+        }
+
+        protected final boolean allTrue(boolean[] b) {
+            boolean all = true;
+            for (boolean bool : b) {
+                if (!bool) all = false;
+            }
+            return all;
+        }
     }
 
 }

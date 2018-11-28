@@ -94,6 +94,8 @@ public abstract class IMUAutonomous extends OpMode {
         heading = 0d;
         if (useIMU) heading = angles.firstAngle - offset;
 
+        telemetry.addData("[HEADING]",heading);
+
         if (runSetup) {
 
             try {
