@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.layla.modular;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,6 +22,7 @@ public class DriveModule extends Module {
     public void init() {
         leftDrive = new MotorGroup(hardwareMap, "left_rear", "left_front");
         rightDrive = new MotorGroup(hardwareMap, "right_rear", "right_front");
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override

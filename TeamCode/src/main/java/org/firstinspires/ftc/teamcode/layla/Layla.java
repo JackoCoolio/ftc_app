@@ -15,7 +15,7 @@ public class Layla extends OpMode {
     TapeMeasureRobot robot;
 
     // TELEMETRY DATA //
-    private double leftPower, rightPower, extendSpeed;
+    private double leftPower, rightPower, extendSpeed, armSpeed;
     private boolean extending, grabbing, releasing;
 
     @Override
@@ -29,13 +29,17 @@ public class Layla extends OpMode {
     @Override
     public void loop() {
 
+        leftPower = -gamepad1.left_stick_y;
+        rightPower = -gamepad1.left_stick_y;
+        armSpeed = -gamepad2.right_stick_y*.4d;
+
         // Gamepad 1 Controls
-        robot.leftDrive.setPower(-gamepad1.left_stick_y);
-        robot.rightDrive.setPower(-gamepad1.right_stick_y);
+        robot.leftDrive.setPower(leftPower);
+        robot.rightDrive.setPower(rightPower);
         // Gamepad 1 Controls
 
         // Gamepad 2 Controls
-        robot.arm.setPower(-gamepad2.right_stick_y*.5d);
+        robot.arm.setPower(armSpeed);
 
 //        if (gamepad2.right_trigger >= .1) {
 //            robot.grab();

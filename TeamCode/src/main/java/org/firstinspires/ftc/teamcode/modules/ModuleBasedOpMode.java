@@ -162,10 +162,10 @@ public abstract class ModuleBasedOpMode extends OpMode {
             Module module = null;
 
             try {
-                Constructor<?> con = clazz.getConstructor(HardwareMap.class, Telemetry.class, Gamepad.class, Gamepad.class);
+                Constructor<?> con = clazz.getConstructor(HardwareMap.class, Gamepad.class, Gamepad.class, Telemetry.class);
                 telemetry.addData("FOUND CONSTRUCTOR", clazz.getSimpleName());
 
-                module = (Module) con.newInstance(hardwareMap, telemetry, gamepad1, gamepad2);
+                module = (Module) con.newInstance(hardwareMap, gamepad1, gamepad2, telemetry);
 
 //                ModuleParameters parameters = new ModuleParameters(hardwareMap, telemetry, gamepad1, gamepad2);
 //                module = (Module) con.newInstance(parameters);
