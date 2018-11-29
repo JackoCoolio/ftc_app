@@ -11,7 +11,7 @@ public class TMModule extends Module {
 
     DcMotor tapeMeasure;
 
-    protected TMModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
+    public TMModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
     }
 

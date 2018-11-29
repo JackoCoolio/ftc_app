@@ -29,7 +29,7 @@ public class ArmModule extends Module {
     Config
      */
 
-    protected ArmModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
+    public ArmModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
     }
 
