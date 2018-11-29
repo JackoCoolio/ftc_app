@@ -47,8 +47,8 @@ public class Layla extends OpMode {
 //            releasing = true;
 //        }
 
-//        robot.grabber1.setPosition(robot.mapServoPosition(-gamepad2.right_trigger, robot.closedPosition, robot.openPosition));
-//        robot.grabber2.setPosition(robot.mapServoPosition(-gamepad2.right_trigger, robot.closedPosition, robot.openPosition));
+        robot.grabber1.setPosition(robot.mapServoPosition(gamepad2.right_trigger, robot.grabber1_open, robot.grabber1_closed));
+        robot.grabber2.setPosition(robot.mapServoPosition(gamepad2.right_trigger, robot.grabber2_open, robot.grabber2_closed));
 
         if (-gamepad2.left_stick_y > .1) {
             robot.extend(Math.abs(gamepad2.left_stick_y));

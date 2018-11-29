@@ -30,8 +30,14 @@ public class TapeMeasureRobot extends Robot {
     Config
      */
     public final double servoSpeed = .01d;
-    public final double openPosition = .5d;
-    public final double closedPosition = 1d;
+//    public final double openPosition = 1d;
+//    public final double closedPosition = .5d;
+
+    public final double grabber1_closed = 1d;
+    public final double grabber1_open = 0d;
+
+    public final double grabber2_closed = 1d;
+    public final double grabber2_open = 0d;
     /*
     Config
      */
@@ -57,8 +63,8 @@ public class TapeMeasureRobot extends Robot {
 
         grabber1.setDirection(Servo.Direction.REVERSE);
 
-        grabber1.setPosition(openPosition);
-        grabber2.setPosition(openPosition);
+        grabber1.setPosition(grabber1_open);
+        grabber2.setPosition(grabber2_open);
 
 
 
@@ -76,18 +82,18 @@ public class TapeMeasureRobot extends Robot {
         tapeMeasure.setPower(-speed);
     }
 
-    public void grab() {
-        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), closedPosition, servoSpeed));
-        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
-    }
+//    public void grab() {
+//        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), closedPosition, servoSpeed));
+//        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
+//    }
 
-    public double[] release() {
-        double p1, p2;
-        p1 = Utility.lerp(grabber1.getPosition(), openPosition, servoSpeed);
-        p2 = Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed);
-        grabber1.setPosition(p1);
-        grabber2.setPosition(p2);
-        return new double[] {p1,p2};
-    }
+//    public double[] release() {
+//        double p1, p2;
+//        p1 = Utility.lerp(grabber1.getPosition(), openPosition, servoSpeed);
+//        p2 = Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed);
+//        grabber1.setPosition(p1);
+//        grabber2.setPosition(p2);
+//        return new double[] {p1,p2};
+//    }
 
 }
