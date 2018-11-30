@@ -44,6 +44,8 @@ public class ArmModule extends Module {
         arm = hardwareMap.dcMotor.get("arm");
         grabber1 = hardwareMap.servo.get("grabber1");
         grabber2 = hardwareMap.servo.get("grabber2");
+
+        grabber1.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
