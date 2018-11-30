@@ -69,8 +69,8 @@ public class ArmModule extends Module {
     }
 
     private void grab() {
-//        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), closedPosition, servoSpeed));
-//        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
+        grabber1.setPosition(Utility.lerp(grabber1.getPosition(), closedPosition, servoSpeed));
+        grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
     }
 
     private void release() {
