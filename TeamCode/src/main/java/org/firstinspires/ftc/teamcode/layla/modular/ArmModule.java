@@ -18,6 +18,7 @@ public class ArmModule extends Module {
 
     private DcMotor arm;
     private Servo grabber1, grabber2;
+    private Servo locker;
 
     /*
     Config
@@ -26,11 +27,14 @@ public class ArmModule extends Module {
     private final double openPosition = 0d;
     private final double closedPosition = 1d;
 
-    public final double grabber1_closed = 1d;
-    public final double grabber1_open = 0d;
+    private final double grabber1_closed = 1d;
+    private final double grabber1_open = 0d;
 
-    public final double grabber2_closed = 1d;
-    public final double grabber2_open = 0d;
+    private final double grabber2_closed = 1d;
+    private final double grabber2_open = 0d;
+
+    private final double lock_position = .35d;
+    private final double unlock_position = 0d;
     /*
     Config
      */
@@ -44,12 +48,16 @@ public class ArmModule extends Module {
         arm = hardwareMap.dcMotor.get("arm");
         grabber1 = hardwareMap.servo.get("grabber1");
         grabber2 = hardwareMap.servo.get("grabber2");
+        locker = hardwareMap.servo.get("lock_servo");
 
         grabber1.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
     public void loop() {
+
+        locker.setPosition(mapServoPosition(gamepad2.left_trigger, unlock_position, lock_position));
+
         arm.setPower(-gamepad2.right_stick_y);
 
         grabber1.setPosition(mapServoPosition(gamepad2.right_trigger, grabber1_open, grabber1_closed));
@@ -64,7 +72,7 @@ public class ArmModule extends Module {
         }
     }
 
-    public double mapServoPosition(double value, double min, double max) {
+    private double mapServoPosition(double value, double min, double max) {
         return value*(max-min) + min;
     }
 
@@ -81,5 +89,6 @@ public class ArmModule extends Module {
     @Override
     public void telemetry() {
         telemetry.addData("Grabber", status.toString());
+        telemetry.addData("Lock Position", Math.round(gamepad2.left_trigger)*100 + "%");
     }
 }
