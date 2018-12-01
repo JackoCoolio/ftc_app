@@ -17,6 +17,7 @@ public class DriveModule extends Module {
 
     private double leftPower, rightPower;
     private double leftPower_alt, rightPower_alt;
+    String turning = "Idle";
 
     public DriveModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
@@ -40,12 +41,15 @@ public class DriveModule extends Module {
         if (gamepad2.left_bumper) {
             leftPower_alt = -alt_influence;
             rightPower_alt = alt_influence;
+            turning = "Turning Left";
         } else if (gamepad2.right_bumper) {
             leftPower_alt = alt_influence;
             rightPower_alt = -alt_influence;
+            turning ="Turning Right";
         } else {
             leftPower_alt = 0;
             rightPower_alt = 0;
+            turning = "Idle";
         }
 
         // Sets the power of each side of the motor.
@@ -57,6 +61,7 @@ public class DriveModule extends Module {
     @Override
     public void telemetry() {
         telemetry.addData("Gamepad 1", "Left Drive: (%.2f), Right Drive: (%.2f)", leftPower, rightPower);
+        telemetry.addData("Gamepad 2", turning);
     }
 
 }
