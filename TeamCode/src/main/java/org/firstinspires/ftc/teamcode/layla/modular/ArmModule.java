@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.layla.modular;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -51,6 +52,7 @@ public class ArmModule extends Module {
         locker = hardwareMap.servo.get("lock_servo");
 
         grabber1.setDirection(Servo.Direction.REVERSE);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
