@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-//public abstract class ModuleBasedOpMode extends OpMode {
+//public abstract class ModularOpMode extends OpMode {
 //
 //    //For easier readability
 //    enum Mode {
@@ -48,8 +48,8 @@ import java.lang.reflect.InvocationTargetException;
 //    @Override
 //    public final void init() {
 //
-//        ModuleBasedOpMode.gamepadA = gamepad1;
-//        ModuleBasedOpMode.gamepadB = gamepad2;
+//        ModularOpMode.gamepadA = gamepad1;
+//        ModularOpMode.gamepadB = gamepad2;
 //
 //        initModules();
 //
@@ -122,7 +122,7 @@ import java.lang.reflect.InvocationTargetException;
 //
 //}
 
-public abstract class ModuleBasedOpMode extends OpMode {
+public abstract class ModularOpMode extends OpMode {
 
     private Class<? extends Module>[] types;
     private Module[] modules;
@@ -146,8 +146,8 @@ public abstract class ModuleBasedOpMode extends OpMode {
     @Override
     public final void init() {
 
-//        ModuleBasedOpMode.gamepadA = gamepad1;
-//        ModuleBasedOpMode.gamepadB = gamepad2;
+//        ModularOpMode.gamepadA = gamepad1;
+//        ModularOpMode.gamepadB = gamepad2;
 
         // Runs initModules() in the OpMode.
         initModules();
