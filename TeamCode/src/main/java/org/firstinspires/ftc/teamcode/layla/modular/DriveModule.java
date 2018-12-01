@@ -12,7 +12,11 @@ public class DriveModule extends Module {
 
     public MotorGroup leftDrive, rightDrive;
 
+    private static final double main_influence = .75;
+    private static final double alt_influence = .25;
+
     private double leftPower, rightPower;
+    private double leftPower_alt, rightPower_alt;
 
     public DriveModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
@@ -27,11 +31,27 @@ public class DriveModule extends Module {
 
     @Override
     public void loop() {
-        leftPower = -gamepad1.left_stick_y;
-        rightPower = -gamepad1.right_stick_y;
 
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+        // Sets the power that the first gamepad has influence over.
+        leftPower = -gamepad1.left_stick_y * main_influence;
+        rightPower = -gamepad1.right_stick_y * main_influence;
+
+        // Gives the second gamepad a bit of control over turning the robot for better adjustments.
+        if (gamepad2.left_bumper) {
+            leftPower_alt = -alt_influence;
+            rightPower_alt = alt_influence;
+        } else if (gamepad2.right_bumper) {
+            leftPower_alt = alt_influence;
+            rightPower_alt = -alt_influence;
+        } else {
+            leftPower_alt = 0;
+            rightPower_alt = 0;
+        }
+
+        // Sets the power of each side of the motor.
+        leftDrive.setPower(leftPower + leftPower_alt);
+        rightDrive.setPower(rightPower + rightPower_alt);
+
     }
 
     @Override
