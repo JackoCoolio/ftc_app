@@ -12,7 +12,10 @@ public class LaylaModular extends ModularOpMode {
 
     @Override
     public void initModules() {
+
+        // Adds modules to the list of modules to be used.
         registerModules(DriveModule.class, TMModule.class, ArmModule.class);
+
     }
 
 }
