@@ -10,14 +10,13 @@ import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
 public class DriveModule extends Module {
 
-    public MotorGroup leftDrive, rightDrive;
+    private MotorGroup leftDrive, rightDrive;
 
     private static final double main_influence = .75;
     private static final double alt_influence = .25;
 
     private double leftPower, rightPower;
-    private double leftPower_alt, rightPower_alt;
-    String turning = "Idle";
+    private String turning = "Idle";
 
     public DriveModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
@@ -32,6 +31,8 @@ public class DriveModule extends Module {
 
     @Override
     public void loop() {
+
+        double leftPower_alt, rightPower_alt;
 
         // Sets the power that the first gamepad has influence over.
         leftPower = -gamepad1.left_stick_y * main_influence;

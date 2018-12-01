@@ -11,16 +11,15 @@ import java.text.DecimalFormat;
 
 public class TMModule extends Module {
 
-    DcMotor tapeMeasure;
-    double power;
+    private DcMotor tapeMeasure;
+    private double power;
 
     enum Status {
         Extending,
         Retracting,
         Idle
     }
-
-    Status status;
+    private Status status;
 
     public TMModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
