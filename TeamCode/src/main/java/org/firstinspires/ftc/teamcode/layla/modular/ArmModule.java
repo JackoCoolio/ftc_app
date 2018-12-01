@@ -58,13 +58,17 @@ public class ArmModule extends Module {
     @Override
     public void loop() {
 
+        // Locker control
         locker.setPosition(mapServoPosition(gamepad2.left_trigger, unlock_position, lock_position));
 
+        // Arm control
         arm.setPower(-gamepad2.right_stick_y);
 
+        // Uses mapServoPosition to set the positions of the servos.
         grabber1.setPosition(mapServoPosition(gamepad2.right_trigger, grabber1_open, grabber1_closed));
         grabber2.setPosition(mapServoPosition(gamepad2.right_trigger, grabber2_open, grabber2_closed));
 
+        // Grabber controls. The grabber is either grabbing or releasing, never in between.
         if (gamepad2.right_trigger >= .1) {
             grab();
             status = GrabberStatus.Grabbing;
@@ -74,20 +78,24 @@ public class ArmModule extends Module {
         }
     }
 
+    // Converts 0-1 to min-max.
     private double mapServoPosition(double value, double min, double max) {
         return value*(max-min) + min;
     }
 
+    // Uses lerp() to move slowly between the current and closed positions of the servo.
     private void grab() {
         grabber1.setPosition(Utility.lerp(grabber1.getPosition(), closedPosition, servoSpeed));
         grabber2.setPosition(Utility.lerp(grabber2.getPosition(), closedPosition, servoSpeed));
     }
 
+    // Uses lerp() to move slowly between the current and open positions of the servo.
     private void release() {
         grabber1.setPosition(Utility.lerp(grabber1.getPosition(), openPosition, servoSpeed));
         grabber2.setPosition(Utility.lerp(grabber2.getPosition(), openPosition, servoSpeed));
     }
 
+    // Displays data about the grabber's status (Grabbing/Releasing) and the locker.
     @Override
     public void telemetry() {
         telemetry.addData("Grabber", status.toString());
