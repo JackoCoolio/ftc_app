@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.layla.modular.ArmModule;
 import org.firstinspires.ftc.teamcode.layla.modular.DriveModule;
+import org.firstinspires.ftc.teamcode.layla.modular.HookModule;
 import org.firstinspires.ftc.teamcode.layla.modular.TMModule;
 import org.firstinspires.ftc.teamcode.modules.ModularOpMode;
 
@@ -14,7 +15,7 @@ public class LaylaModular extends ModularOpMode {
     public void initModules() {
 
         // Adds modules to the list of modules to be used.
-        registerModules(DriveModule.class, TMModule.class, ArmModule.class);
+        registerModules(ArmModule.class, DriveModule.class, TMModule.class, HookModule.class);
 
     }
 

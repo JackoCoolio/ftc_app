@@ -24,6 +24,8 @@ public class ArmModule extends Module {
     /*
     Config
      */
+    private final double armSpeed = 1d;
+
     private final double servoSpeed = .5d;
     private final double openPosition = 0d;
     private final double closedPosition = 1d;
@@ -34,8 +36,8 @@ public class ArmModule extends Module {
     private final double grabber2_closed = 1d;
     private final double grabber2_open = 0d;
 
-    private final double lock_position = .35d;
-    private final double unlock_position = 0d;
+    private final double lock_position =  0d;
+    private final double unlock_position = .35d;
     /*
     Config
      */
@@ -53,6 +55,7 @@ public class ArmModule extends Module {
 
         grabber1.setDirection(Servo.Direction.REVERSE);
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        locker.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
@@ -62,20 +65,20 @@ public class ArmModule extends Module {
         locker.setPosition(mapServoPosition(gamepad2.left_trigger, unlock_position, lock_position));
 
         // Arm control
-        arm.setPower(-gamepad2.right_stick_y);
+        arm.setPower(-gamepad2.right_stick_y * armSpeed);
 
         // Uses mapServoPosition to set the positions of the servos.
         grabber1.setPosition(mapServoPosition(gamepad2.right_trigger, grabber1_open, grabber1_closed));
         grabber2.setPosition(mapServoPosition(gamepad2.right_trigger, grabber2_open, grabber2_closed));
 
-        // Grabber controls. The grabber is either grabbing or releasing, never in between.
-        if (gamepad2.right_trigger >= .1) {
-            grab();
-            status = GrabberStatus.Grabbing;
-        } else {
-            release();
-            status = GrabberStatus.Releasing;
-        }
+//        // Grabber controls. The grabber is either grabbing or releasing, never in between.
+//        if (gamepad2.right_trigger >= .1) {
+//            grab();
+//            status = GrabberStatus.Grabbing;
+//        } else {
+//            release();
+//            status = GrabberStatus.Releasing;
+//        }
     }
 
     // Converts 0-1 to min-max.

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.layla.modular;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -28,6 +29,7 @@ public class TMModule extends Module {
     @Override
     public void init() {
         tapeMeasure = hardwareMap.dcMotor.get("tape_measure");
+        tapeMeasure.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
