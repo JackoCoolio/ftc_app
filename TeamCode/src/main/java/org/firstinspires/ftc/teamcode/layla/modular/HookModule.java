@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.Module;
+import org.firstinspires.ftc.teamcode.utility.Button;
 
 /**
  * Created by jdwam on 12/2/2018.
@@ -19,7 +20,7 @@ public class HookModule extends Module {
     private double engaged_pos = 0d;
     private double disengaged_pos = 1d;
 
-    private boolean pressable = true;
+    private Button button;
 
     public HookModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
@@ -28,21 +29,16 @@ public class HookModule extends Module {
     @Override
     public void init() {
         hook = hardwareMap.servo.get("hook");
+        button = new Button(false);
     }
 
     @Override
     public void loop() {
 //        hook.setPosition(-gamepad1.right_stick_y);
 
-        if (gamepad2.a && pressable) {
-            pressable = false;
-            engaged = !engaged;
-        }
-        if (!gamepad2.a) {
-            pressable = true;
-        }
+        button.update(gamepad2.a);
 
-        if (engaged) {
+        if (button.getState()) {
             hook.setPosition(engaged_pos);
         } else {
             hook.setPosition(disengaged_pos);
