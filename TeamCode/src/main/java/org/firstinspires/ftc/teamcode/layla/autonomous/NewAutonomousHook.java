@@ -1,17 +1,12 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.layla.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.main.AutonomousConstants;
 import org.firstinspires.ftc.teamcode.autonomous.main.IMUAutonomous;
-import org.firstinspires.ftc.teamcode.autonomous.main.StagePresets;
 import org.firstinspires.ftc.teamcode.hardware.TapeMeasureRobot;
-import org.firstinspires.ftc.teamcode.layla.Layla;
-import org.firstinspires.ftc.teamcode.layla.modular.TMModule;
-import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
 /**
  * Created by jdwam on 12/2/2018.
