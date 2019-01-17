@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.Module;
 
-import java.text.DecimalFormat;
-
-public class TMModule extends Module {
+public class LiftModule extends Module {
 
     private DcMotor tapeMeasure;
     private double power;
@@ -22,7 +20,7 @@ public class TMModule extends Module {
     }
     private Status status;
 
-    public TMModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
+    public LiftModule(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
         super(hardwareMap, gamepad1, gamepad2, telemetry);
     }
 

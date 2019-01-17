@@ -12,8 +12,8 @@ public class DriveModule extends Module {
 
     private MotorGroup leftDrive, rightDrive;
 
-    private static final double MAIN_INFLUENCE = .9;
-    private static final double ALT_INFLENCE = .1;
+    private static final double MAIN_INFLUENCE = .8;
+    private static final double ALT_INFLUENCE = .2;
 
     private double leftPower, rightPower;
     private String turning = "Idle";
@@ -40,12 +40,12 @@ public class DriveModule extends Module {
 
         // Gives the second gamepad a bit of control over turning the robot for better adjustments.
         if (gamepad2.left_bumper) {
-            leftPower_alt = -ALT_INFLENCE;
-            rightPower_alt = ALT_INFLENCE;
+            leftPower_alt = -ALT_INFLUENCE;
+            rightPower_alt = ALT_INFLUENCE;
             turning = "Turning Left";
         } else if (gamepad2.right_bumper) {
-            leftPower_alt = ALT_INFLENCE;
-            rightPower_alt = -ALT_INFLENCE;
+            leftPower_alt = ALT_INFLUENCE;
+            rightPower_alt = -ALT_INFLUENCE;
             turning ="Turning Right";
         } else {
             leftPower_alt = 0;
