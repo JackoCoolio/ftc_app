@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.modules.Module;
 
 public class LiftModule extends Module {
 
-    private DcMotor tapeMeasure;
+    private DcMotor lift;
     private double power;
 
     enum Status {
@@ -26,14 +26,14 @@ public class LiftModule extends Module {
 
     @Override
     public void init() {
-        tapeMeasure = hardwareMap.dcMotor.get("tape_measure");
-        tapeMeasure.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift = hardwareMap.dcMotor.get("tape_measure");
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
     public void loop() {
         power = -gamepad2.left_stick_y;
-        tapeMeasure.setPower(power);
+        lift.setPower(power);
         updateStatus();
     }
 
