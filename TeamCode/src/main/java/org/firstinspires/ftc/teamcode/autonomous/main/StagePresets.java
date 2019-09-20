@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous.main;
 
-import android.nfc.TagLostException;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utility.DelayedValue;
 import org.firstinspires.ftc.teamcode.utility.MotorGroup;
 
 /**
@@ -29,21 +26,21 @@ public class StagePresets {
         return new DriveStage(speed, inches, timeout, telemetry, groups);
     }
 
-    public static IMUAutonomous.Stage drive(final double speed, final DelayedValue<Double> inchGetter, final double timeout, final Telemetry telemetry, final MotorGroup... _groups) {
-        final MotorGroup[] groups;
-        if (_groups.length == 0) {
-            groups = driveMotorGroups;
-        } else {
-            groups = _groups;
-        }
-        return new DriveStage(speed, 0, timeout, telemetry, groups) {
-            @Override
-            public void setup(double heading, ElapsedTime runtime) {
-                inches = inchGetter.getValue();
-                super.setup(heading, runtime);
-            }
-        };
-    }
+//    public static IMUAutonomous.Stage drive(final double speed, final DelayedValue<Double> inchGetter, final double timeout, final Telemetry telemetry, final MotorGroup... _groups) {
+//        final MotorGroup[] groups;
+//        if (_groups.length == 0) {
+//            groups = driveMotorGroups;
+//        } else {
+//            groups = _groups;
+//        }
+//        return new DriveStage(speed, 0, timeout, telemetry, groups) {
+//            @Override
+//            public void setup(double heading, ElapsedTime runtime) {
+//                inches = inchGetter.getValue();
+//                super.setup(heading, runtime);
+//            }
+//        };
+//    }
 
     public static IMUAutonomous.Stage turn(final Direction dir, final double target, final double speed, final MotorGroup left, final MotorGroup right) {
         return new IMUAutonomous.Stage() {

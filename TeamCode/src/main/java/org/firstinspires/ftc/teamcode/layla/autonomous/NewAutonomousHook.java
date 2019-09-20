@@ -96,7 +96,7 @@ public class NewAutonomousHook extends IMUAutonomous {
                             return true;
                         }
                     }
-        }
+                }
         };
 
 
